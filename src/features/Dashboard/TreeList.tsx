@@ -1,4 +1,4 @@
-import { Badge, FilledButton, IconButton, OutlinedButton } from "components";
+import { Badge, Button, IconButton } from "components";
 import React from "react";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import de from "date-fns/locale/de";
@@ -33,13 +33,13 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         </span>
       </div>
       <div className="flex self-end">
-        <FilledButton
+        <Button
           variant="ghost"
           className="text-gray-500 hover:text-red-700 mr-4"
         >
           Archivieren
-        </FilledButton>
-        <OutlinedButton>Öffnen</OutlinedButton>
+        </Button>
+        <Button kind="outlined">Öffnen</Button>
       </div>
     </div>
   </div>
@@ -70,11 +70,10 @@ const SortButton: React.FunctionComponent<SortButton> = ({
   };
 
   return (
-    <FilledButton
+    <Button
       className="flex"
       variant="ghost"
-      active={sort.key === name}
-      rounded={false}
+      rounded="none"
       onClick={() =>
         setSort({
           key: name,
@@ -91,7 +90,7 @@ const SortButton: React.FunctionComponent<SortButton> = ({
       >
         <ChevronDownSolid className="w-6" />
       </motion.span>
-    </FilledButton>
+    </Button>
   );
 };
 

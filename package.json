@@ -60,6 +60,7 @@
     "@canarise/snowpack-eslint-plugin": "^0.1.0",
     "@graywolfai/react-heroicons": "^1.2.3",
     "@reach/portal": "^0.13.2",
+    "@stitches/react": "^0.1.0-canary.19",
     "@urql/devtools": "^2.0.3",
     "clsx": "^1.1.1",
     "d3-shape": "^2.0.0",

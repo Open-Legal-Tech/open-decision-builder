@@ -1,5 +1,5 @@
 import React from "react";
-import { FilledButton, Field, Logo, Tabs } from "components";
+import { Button, Field, Logo, Tabs } from "components";
 import { LocationState } from "internalTypes";
 import { useAuthMethods } from "features";
 import { useHistory, useLocation } from "react-router-dom";
@@ -64,8 +64,8 @@ const LoginForm: React.FunctionComponent = () => {
           </a>
         </div>
       </div>
-      <FilledButton
-        rounded={false}
+      <Button
+        rounded="none"
         className="h-20"
         type="submit"
         onClick={(event) => {
@@ -74,7 +74,7 @@ const LoginForm: React.FunctionComponent = () => {
         }}
       >
         Log-In
-      </FilledButton>
+      </Button>
     </form>
   );
 };
@@ -136,9 +136,9 @@ const SignupForm: React.FunctionComponent = () => {
           .
         </div>
       </div>
-      <FilledButton
+      <Button
         className="h-20"
-        rounded={false}
+        rounded="none"
         type="submit"
         onClick={(event) => {
           event.preventDefault();
@@ -148,7 +148,7 @@ const SignupForm: React.FunctionComponent = () => {
         }}
       >
         Registrieren
-      </FilledButton>
+      </Button>
     </form>
   );
 };

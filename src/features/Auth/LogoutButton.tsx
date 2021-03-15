@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { FunctionComponent } from "react";
-import { FilledButton } from "components";
+import { Button } from "components";
 import { useAuthMethods } from "./AuthContext";
 
 export const LogoutButton: FunctionComponent<{ className?: string }> = ({
@@ -12,11 +12,11 @@ export const LogoutButton: FunctionComponent<{ className?: string }> = ({
 
   //TODO handle Failure in UI
   return (
-    <FilledButton
+    <Button
       onClick={() => logout(() => history.push("/"))}
       className={className}
     >
       Logout
-    </FilledButton>
+    </Button>
   );
 };
