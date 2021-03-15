@@ -9,11 +9,10 @@ import shallow from "zustand/shallow";
 import { ChatOutline, PlusOutline } from "@graywolfai/react-heroicons";
 import { getOutputConnections } from "./utilities";
 import { Port } from "./Port";
-import { useNewNodeMenu } from "./useNewNodeMenu";
 import { useSidebarState } from "./useSidebar";
 import clsx from "clsx";
-import { Button } from "components";
 import { NewNodeMenu } from "./NewNodeMenu";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 type NodeProps = {
   /**
@@ -66,6 +65,8 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
     onPointerLeave: () => removeEdgeTarget(),
   });
 
+  const [open, setOpen] = React.useState(false);
+
   return (
     <div
       style={{
@@ -77,8 +78,7 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
       {...boxGestures()}
     >
       {/* This is the body of the Node. */}
-      <Button
-        variant="ghost"
+      <button
         className={clsx(
           "bg-gray-100 rounded shadow-lg flex flex-col select-none border-l-4 hover:shadow-xl transition-shadow duration-200 col-start-2 col-end-5 row-span-full",
           dragging ? "opacity-100" : "opacity-80"
@@ -94,14 +94,16 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
           />
           <h2 className="font-semibold flex-1 text-left">{node.name}</h2>
         </div>
-      </Button>
-      {/* These are the Ports of the Nodes. There is only one Port on each side. The Output Port can also be an unconnected port. This port looks different and has a menu to create a new Node. Above we get the outputConnections and here we use them to decide which port to render. */}
+      </button>
+      {/* These are the Ports of the Nodes. There is only one Port on each side. */}
       <Port
         nodeId={id}
         className="col-start-1 col-end-3 row-span-full self-center justify-self-center"
         variant="connected"
         type="input"
       />
+      {/* If the Outputport is unconnected a dropdown menu is rendered instead. This menu contains all the Nodes that can be added.
+       Above we get the outputConnections and here we use them to decide which port to render. */}
       {outputConnections ? (
         <Port
           nodeId={id}
@@ -110,14 +112,20 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
           type="output"
         />
       ) : (
-        <Port
-          className="col-start-4 col-end-6 row-span-full self-center justify-self-center"
-          nodeId={id}
-          variant="unconnected"
-          type="output"
-        >
-          <NewNodeMenu />
-        </Port>
+        <NewNodeMenu nodeId={id} open={open} onOpenChange={setOpen}>
+          <DropdownMenu.Trigger className="col-start-4 col-end-6 row-span-full self-center justify-self-center z-10">
+            {/* We have to manually control the opening of the Menu when the Port is clicked,
+            because the Port has the PointerDown handler attached that enables the creation of a new connection. */}
+            <Port
+              nodeId={id}
+              variant="unconnected"
+              type="output"
+              onClick={() => setOpen(!open)}
+            >
+              <PlusOutline className="text-white w-full" />
+            </Port>
+          </DropdownMenu.Trigger>
+        </NewNodeMenu>
       )}
     </div>
   );

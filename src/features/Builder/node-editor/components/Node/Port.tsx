@@ -95,5 +95,3 @@ export const Port: Port = ({
     </div>
   );
 };
-
-Port.displayName = "Port";
