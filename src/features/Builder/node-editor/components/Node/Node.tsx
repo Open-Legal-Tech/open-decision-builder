@@ -12,7 +12,8 @@ import { Port } from "./Port";
 import { useNewNodeMenu } from "./useNewNodeMenu";
 import { useSidebarState } from "./useSidebar";
 import clsx from "clsx";
-import { GhostButton } from "components/Buttons/GhostButton";
+import { Button } from "components";
+import { NewNodeMenu } from "./NewNodeMenu";
 
 type NodeProps = {
   /**
@@ -37,7 +38,6 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
   );
   const [dragging, setDragging] = React.useState(false);
 
-  const { openMenu } = useNewNodeMenu();
   const openSidebar = useSidebarState((state) => state.openSidebar);
 
   //-----------------------------------------------------------------------
@@ -77,7 +77,8 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
       {...boxGestures()}
     >
       {/* This is the body of the Node. */}
-      <GhostButton
+      <Button
+        variant="ghost"
         className={clsx(
           "bg-gray-100 rounded shadow-lg flex flex-col select-none border-l-4 hover:shadow-xl transition-shadow duration-200 col-start-2 col-end-5 row-span-full",
           dragging ? "opacity-100" : "opacity-80"
@@ -93,7 +94,7 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
           />
           <h2 className="font-semibold flex-1 text-left">{node.name}</h2>
         </div>
-      </GhostButton>
+      </Button>
       {/* These are the Ports of the Nodes. There is only one Port on each side. The Output Port can also be an unconnected port. This port looks different and has a menu to create a new Node. Above we get the outputConnections and here we use them to decide which port to render. */}
       <Port
         nodeId={id}
@@ -115,15 +116,7 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
           variant="unconnected"
           type="output"
         >
-          <button
-            onClick={(event) => {
-              event.stopPropagation();
-              openMenu([event.pageX, event.pageY], id);
-            }}
-            className="w-full h-full p-1"
-          >
-            <PlusOutline className="text-white" />
-          </button>
+          <NewNodeMenu />
         </Port>
       )}
     </div>

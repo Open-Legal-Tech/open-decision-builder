@@ -19,9 +19,6 @@ import {
   portTypes,
 } from "./types";
 import { NewNodeToolbar } from "./components/NewNodeToolbar/NewNodeToolbar";
-import { useNewNodeMenu } from "./components/Node/useNewNodeMenu";
-import { NewNodeMenu } from "./components/Node/NewNodeMenu";
-import Portal from "@reach/portal";
 import shallow from "zustand/shallow";
 import { useSidebarState } from "./components/Node/useSidebar";
 import { NodeEditingSidebar } from "./components/Node/NodeEditingSidebar";
@@ -101,7 +98,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
   const setNodes = useNodesStore((state) => state.setNodes, shallow);
   const setEdges = useEdgesStore((state) => state.setEdges, shallow);
 
-  const { isMenuOpen } = useNewNodeMenu();
   const isSidebarOpen = useSidebarState((state) => state.open);
 
   React.useEffect(() => {
@@ -141,11 +137,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
       >
         <ConnectionsWrapper />
         <Nodes />
-        {isMenuOpen && (
-          <Portal>
-            <NewNodeMenu />
-          </Portal>
-        )}
       </Stage>
       {isSidebarOpen && (
         <NodeEditingSidebar
