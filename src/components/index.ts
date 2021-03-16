@@ -6,6 +6,5 @@ export * from "./Logo";
 export * from "./UserMenu";
 export * from "./Field";
 export * from "./Badge";
-export * from "./Tabs";
 export * from "./Input";
 export * from "./FileInput";
