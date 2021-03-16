@@ -1,4 +1,4 @@
-import { Badge, Button, IconButton } from "components";
+import { Badge, Button } from "components";
 import React from "react";
 import { parseISO, formatWithOptions } from "date-fns/esm/fp";
 import de from "date-fns/locale/de";
@@ -9,6 +9,7 @@ import {
 import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
 import { ValidTreeNode } from "./types";
+import { identity, pipe } from "remeda";
 
 type TreeCard = { tree: ValidTreeNode };
 
@@ -20,9 +21,9 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
           {tag.name}
         </Badge>
       ))}
-      <IconButton size="small">
+      <Button rounded="full" variant="icon" size="small">
         <PlusCircleOutline className="w-6 h-6" />
-      </IconButton>
+      </Button>
     </div>
 
     <div className="px-4 pb-4 flex items-baseline">
@@ -39,7 +40,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         >
           Archivieren
         </Button>
-        <Button kind="outlined">Öffnen</Button>
+        <Button outlined>Öffnen</Button>
       </div>
     </div>
   </div>
@@ -71,7 +72,6 @@ const SortButton: React.FunctionComponent<SortButton> = ({
 
   return (
     <Button
-      className="flex"
       variant="ghost"
       rounded="none"
       onClick={() =>
@@ -95,25 +95,33 @@ const SortButton: React.FunctionComponent<SortButton> = ({
 };
 
 type TreeList = { data: ValidTreeNode[] };
+type sortState = { key: string; descending: boolean };
+
+const sortData = (sort: sortState) => (data: ValidTreeNode[]) =>
+  sort.descending
+    ? sortByKey(data, sort.key)
+    : sortByKey(data, sort.key).reverse();
+
+const filterData = (filter: string) => (data: ValidTreeNode[]) =>
+  fuzzySearch(data, filter);
 
 export const TreeList: React.FC<TreeList> = ({ data }) => {
   const [filter, setFilter] = React.useState("");
   const [filteredData, setFilteredData] = React.useState(data);
-  const [sort, setSort] = React.useState({ key: "", descending: true });
+  const [sort, setSort] = React.useState<sortState>({
+    key: "",
+    descending: true,
+  });
 
   React.useEffect(() => {
-    let modifiedData = filteredData;
-
-    filter ? (modifiedData = fuzzySearch(data, filter)) : (modifiedData = data);
-
-    sort.key
-      ? sort.descending
-        ? (modifiedData = sortByKey(modifiedData, sort.key))
-        : (modifiedData = sortByKey(modifiedData, sort.key).reverse())
-      : null;
+    const modifiedData = pipe(
+      data,
+      filter ? filterData(filter) : identity,
+      sort.key ? sortData(sort) : identity
+    );
 
     setFilteredData(modifiedData);
-  }, [data, filter, filteredData, sort]);
+  }, [data, filter, sort]);
 
   return (
     <div className="space-y-8 my-12">
