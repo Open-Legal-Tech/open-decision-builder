@@ -89,9 +89,15 @@ export const Builder: React.FC = () => {
                   gap: "$4",
                 })()}
               >
-                <Button size="small">Preview</Button>
-                <Button size="small">Export</Button>
-                <Button size="small">Speichern</Button>
+                <Button size="small" outlined>
+                  Preview
+                </Button>
+                <Button size="small" outlined>
+                  Export
+                </Button>
+                <Button size="small" outlined>
+                  Speichern
+                </Button>
               </div>
             </>
           ) : null}
@@ -113,7 +119,7 @@ export const Builder: React.FC = () => {
                 />
                 <Button
                   variant="secondary"
-                  kind="outlined"
+                  outlined
                   onClick={() => setData(initialEditorState(number))}
                 >
                   <ChevronRightOutline className="w-6" />
