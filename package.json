@@ -60,6 +60,7 @@
     "@canarise/snowpack-eslint-plugin": "^0.1.0",
     "@graywolfai/react-heroicons": "^1.2.3",
     "@radix-ui/react-avatar": "^0.0.6",
+    "@radix-ui/react-collapsible": "^0.0.7",
     "@radix-ui/react-dropdown-menu": "^0.0.10",
     "@radix-ui/react-portal": "^0.0.6",
     "@radix-ui/react-tabs": "^0.0.6",

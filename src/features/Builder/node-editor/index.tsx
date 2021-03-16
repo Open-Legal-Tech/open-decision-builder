@@ -129,11 +129,11 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         gridTemplateRows: "1fr",
       }}
     >
-      <NewNodeToolbar style={{ gridColumn: "1", gridRow: "1" }} />
+      <NewNodeToolbar css={{ gridColumn: "1 / 2", gridRow: "1", zIndex: 1 }} />
       <Stage
         disablePan={disablePan}
         disableZoom={disableZoom}
-        style={{ gridColumn: "2 / 4", gridRow: "1" }}
+        style={{ gridColumn: "1 / -1", gridRow: "1" }}
       >
         <ConnectionsWrapper />
         <Nodes />
