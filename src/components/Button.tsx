@@ -1,12 +1,10 @@
 import { styled } from "utils/stitches.config";
-
 export const Button = styled("button", {
   fontWeight: "$bold",
   transition: "all",
   transitionDuration: "0.1s",
   padding: "$2 $4",
   display: "flex",
-  boxShadow: "$sm",
   justifyContent: "center",
 
   "&:hover": {
@@ -41,18 +39,20 @@ export const Button = styled("button", {
       default: {
         borderRadius: "$sm",
       },
-      circle: {
+      full: {
         borderRadius: "$full",
       },
       none: {},
     },
     kind: {
-      filled: {},
+      filled: { boxShadow: "$sm" },
       outlined: {
         backgroundColor: "transparent",
         border: "solid currentcolor",
         borderWidth: "$2",
+        boxShadow: "$sm",
       },
+      ghost: {},
     },
     size: {
       small: {

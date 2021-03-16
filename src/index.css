@@ -6,10 +6,6 @@ body {
 @tailwind base;
 @tailwind components;
 
-:is(a, input):focus {
-  @apply outline-none ring;
-}
-
 .menu-link {
   @apply text-sm font-semibold p-3 rounded-lg hover:shadow-inner hover:bg-gray-300;
 }
