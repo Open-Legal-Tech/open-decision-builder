@@ -21,6 +21,7 @@ const Content = styled(DropdownMenu.Content, {
   borderRadius: "$sm",
   padding: "$2 $3",
   boxShadow: "$xl",
+  marginTop: "$2",
 });
 
 const Item = styled(DropdownMenu.Item, {

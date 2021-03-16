@@ -30,6 +30,7 @@ export const Port: Port = ({
   ...props
 }) => {
   const connectionRef = React.useRef<SVGPathElement>(null);
+  const [dragging, setDragging] = React.useState(false);
 
   const [
     addEdge,
@@ -44,7 +45,6 @@ export const Port: Port = ({
     state.startNewEdgeCreation,
     state.endNewEdgeCreation,
   ]);
-  const [dragging, setDragging] = React.useState(false);
 
   const handleDragStart = (event: React.PointerEvent<HTMLDivElement>) => {
     event.preventDefault();

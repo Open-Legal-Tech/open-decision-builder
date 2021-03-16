@@ -12,7 +12,7 @@ import { Port } from "./Port";
 import { useSidebarState } from "./useSidebar";
 import clsx from "clsx";
 import { NewNodeMenu } from "./NewNodeMenu";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Trigger } from "@radix-ui/react-dropdown-menu";
 
 type NodeProps = {
   /**
@@ -113,7 +113,7 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
         />
       ) : (
         <NewNodeMenu nodeId={id} open={open} onOpenChange={setOpen}>
-          <DropdownMenu.Trigger className="col-start-4 col-end-6 row-span-full self-center justify-self-center z-10">
+          <Trigger className="col-start-4 col-end-6 row-span-full self-center justify-self-center z-10">
             {/* We have to manually control the opening of the Menu when the Port is clicked,
             because the Port has the PointerDown handler attached that enables the creation of a new connection. */}
             <Port
@@ -124,7 +124,7 @@ export const Node: React.FC<NodeProps> = ({ id }) => {
             >
               <PlusOutline className="text-white w-full" />
             </Port>
-          </DropdownMenu.Trigger>
+          </Trigger>
         </NewNodeMenu>
       )}
     </div>
