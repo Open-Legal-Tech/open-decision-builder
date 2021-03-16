@@ -1,8 +1,32 @@
 import React from "react";
-import { Button, Field, Logo, Tabs } from "components";
+import { Button, Field, Logo } from "components";
 import { LocationState } from "internalTypes";
 import { useAuthMethods } from "features";
 import { useHistory, useLocation } from "react-router-dom";
+import * as Tabs from "@radix-ui/react-tabs";
+import { styled } from "utils/stitches.config";
+
+const TabList = styled(Tabs.List, {
+  display: "flex",
+  justifyContent: "space-around",
+});
+
+const Tab = styled(Tabs.Tab, {
+  flexGrow: 1,
+  flexBasis: "0",
+  padding: "$4",
+  display: "flex",
+  justifyContent: "center",
+
+  "&:hover, &:focus": {
+    backgroundColor: "$primary200",
+  },
+
+  '&[data-state="active"]': {
+    boxShadow: "inset 0 -2px 0 0 $colors$primary500",
+    backgroundColor: "$primary50",
+  },
+});
 
 export const LoginCard: React.FunctionComponent = () => {
   return (
@@ -11,14 +35,18 @@ export const LoginCard: React.FunctionComponent = () => {
         <div className="flex justify-center items-center p-8 bg-gradient-to-r from-gray-100 to-gray-300">
           <Logo />
         </div>
-        <Tabs
-          className="shadow-inner"
-          initialActive="Einloggen"
-          Tabs={[
-            { label: "Einloggen", Component: LoginForm },
-            { label: "Registrieren", Component: SignupForm },
-          ]}
-        />
+        <Tabs.Root defaultValue="login">
+          <TabList>
+            <Tab value="login">Einloggen</Tab>
+            <Tab value="register">Registrieren</Tab>
+          </TabList>
+          <Tabs.Panel value="login">
+            <LoginForm />
+          </Tabs.Panel>
+          <Tabs.Panel value="register">
+            <SignupForm />
+          </Tabs.Panel>
+        </Tabs.Root>
       </div>
     </div>
   );
