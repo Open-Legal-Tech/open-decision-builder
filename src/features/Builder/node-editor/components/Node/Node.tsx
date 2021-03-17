@@ -9,10 +9,10 @@ import shallow from "zustand/shallow";
 import { ChatOutline, PlusOutline } from "@graywolfai/react-heroicons";
 import { getOutputConnections } from "./utilities";
 import { Port } from "./Port";
-import { useSidebarState } from "./useSidebar";
 import clsx from "clsx";
 import { NewNodeMenu } from "./NewNodeMenu";
 import { Trigger } from "@radix-ui/react-dropdown-menu";
+import { useSidebarState } from "../Sidebar/NodeEditingSidebar";
 
 type NodeProps = {
   /**

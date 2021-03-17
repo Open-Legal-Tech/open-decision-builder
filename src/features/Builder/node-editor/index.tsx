@@ -3,8 +3,6 @@ import React from "react";
 
 //Components
 import { Stage } from "./components/Stage/Stage";
-// import { Comment } from "./components/Comment/Comment";
-// import { Toaster } from "./components/Toaster/Toaster";
 
 //Hooks and Functions
 import { useEdgesStore, useEditorStore, useNodesStore } from "./globalState";
@@ -18,10 +16,12 @@ import {
   nodeTypes,
   portTypes,
 } from "./types";
-import { NewNodeToolbar } from "./components/NewNodeToolbar/NewNodeToolbar";
 import shallow from "zustand/shallow";
-import { useSidebarState } from "./components/Node/useSidebar";
-import { NodeEditingSidebar } from "./components/Node/NodeEditingSidebar";
+import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
+import {
+  NodeEditingSidebar,
+  useSidebarState,
+} from "./components/Sidebar/NodeEditingSidebar";
 
 export type EditorState = {
   /**
@@ -127,9 +127,10 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
       style={{
         gridTemplateColumns: "max-content 4fr 1fr",
         gridTemplateRows: "1fr",
+        overflow: "hidden",
       }}
     >
-      <NewNodeToolbar css={{ gridColumn: "1 / 2", gridRow: "1", zIndex: 1 }} />
+      <NewNodeSidebar css={{ gridColumn: "1 / 2", gridRow: "1", zIndex: 1 }} />
       <Stage
         disablePan={disablePan}
         disableZoom={disableZoom}
@@ -138,12 +139,9 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         <ConnectionsWrapper />
         <Nodes />
       </Stage>
-      {isSidebarOpen && (
-        <NodeEditingSidebar
-          className="bg-gray-100 z-10"
-          style={{ gridColumn: "3 / 4", gridRow: "1" }}
-        />
-      )}
+      <NodeEditingSidebar
+        css={{ gridColumn: "3 / 4", gridRow: "1", zIndex: 1 }}
+      />
     </div>
   );
 };
