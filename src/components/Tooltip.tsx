@@ -3,17 +3,17 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { Slot } from "@radix-ui/react-slot";
 import { styled } from "utils/stitches.config";
 
+const Content = styled(TooltipPrimitive.Content, {
+  backgroundColor: "$gray200",
+  padding: "$1 $2",
+});
+
 type TooltipProps = {
   content: string;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-};
-
-const Content = styled(TooltipPrimitive.Content, {
-  backgroundColor: "$gray200",
-  padding: "$1 $2",
-});
+} & React.ComponentProps<typeof Content>;
 
 export const Tooltip: React.FC<TooltipProps> = ({
   children,
