@@ -5,13 +5,11 @@ import { pick } from "remeda";
 import { ToolbarNode } from "./ToolbarNode";
 import { nanoid } from "nanoid/non-secure";
 import { coordinates } from "../../types";
-import { CSS, styled, keyframes } from "utils/stitches.config";
-import {
-  ChevronDownOutline,
-  ChevronDownSolid,
-} from "@graywolfai/react-heroicons";
+import { CSS, styled } from "utils/stitches.config";
+import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { motion } from "framer-motion";
 import { Tooltip } from "components";
+import { useKeyPressEvent } from "react-use";
 
 const turnNumberIntoOpposite = (number: number) =>
   number > 0 ? -number : Math.abs(number);
@@ -41,16 +39,6 @@ const Content = styled(Collapsible.Content, {
   boxShadow: "$xl",
 });
 
-const rotateLeft = keyframes({
-  from: { transform: "rotate(0deg)" },
-  to: { transform: "rotate(180deg)" },
-});
-
-const rotateRight = keyframes({
-  from: { transform: "rotate(180deg)" },
-  to: { transform: "rotate(0deg)" },
-});
-
 const Toggle = styled(Collapsible.Button, {
   gridColumn: "2",
   margin: "$4",
@@ -59,15 +47,6 @@ const Toggle = styled(Collapsible.Button, {
   padding: "$1",
   borderRadius: "$md",
   backgroundColor: "$warmGray200",
-
-  // "> *": {
-  //   animation: `${rotateRight} 300ms`,
-  // },
-
-  // '&[data-state="open"] > *': {
-  //   animation: `${rotateLeft} 300ms`,
-  //   animationFillMode: "forwards",
-  // },
 });
 
 const Header = styled("h2", {
@@ -94,6 +73,8 @@ type NewNodeToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export const NewNodeToolbar: React.FC<NewNodeToolbarProps> = ({ css }) => {
   const [open, setOpen] = React.useState(false);
+  useKeyPressEvent("Escape", () => setOpen(false));
+
   const nodeTypes = useNodesStore((state) => state.nodeTypes);
   const options = Object.values(nodeTypes).map((nodeType) =>
     pick(nodeType, ["label", "color", "type", "width"])
@@ -104,12 +85,14 @@ export const NewNodeToolbar: React.FC<NewNodeToolbarProps> = ({ css }) => {
     state.coordinates,
     state.zoom,
   ]);
+
   const centerOfStage = getCenterOfStage(stageCoordinates, zoom);
 
   return (
     <Root css={css} open={open} onOpenChange={() => setOpen(!open)}>
       <AnimationContainer
         animate={open ? "open" : "closed"}
+        initial="closed"
         variants={sidebarAnimationVariants}
         transition={{ duration: 0.3 }}
       >
@@ -131,6 +114,7 @@ export const NewNodeToolbar: React.FC<NewNodeToolbarProps> = ({ css }) => {
             <motion.div
               variants={arrowAnimationVariants}
               animate={open ? "open" : "closed"}
+              initial="closed"
             >
               <ChevronDownSolid />
             </motion.div>
