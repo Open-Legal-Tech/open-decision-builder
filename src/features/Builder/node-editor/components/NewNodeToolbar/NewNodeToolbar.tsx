@@ -6,7 +6,11 @@ import { ToolbarNode } from "./ToolbarNode";
 import { nanoid } from "nanoid/non-secure";
 import { coordinates } from "../../types";
 import { CSS, styled, keyframes } from "utils/stitches.config";
-import { ChevronRightOutline } from "@graywolfai/react-heroicons";
+import {
+  ChevronDownOutline,
+  ChevronDownSolid,
+} from "@graywolfai/react-heroicons";
+import { motion } from "framer-motion";
 import { Tooltip } from "components";
 
 const turnNumberIntoOpposite = (number: number) =>
@@ -20,12 +24,15 @@ const getCenterOfStage = (
   turnNumberIntoOpposite(coordinates[1] / zoom),
 ];
 
-const ToolbarRoot = styled(Collapsible.Root, {
+const Root = styled(Collapsible.Root, {});
+
+const AnimationContainer = styled(motion.div, {
+  height: "100%",
   display: "grid",
-  gridTemplateColumns: "max-content 1fr",
+  gridTemplateColumns: "repeat(2, max-content)",
 });
 
-const ToolbarContent = styled(Collapsible.Content, {
+const Content = styled(Collapsible.Content, {
   gridColumn: "1",
   backgroundColor: "white",
   width: "300px",
@@ -44,7 +51,7 @@ const rotateRight = keyframes({
   to: { transform: "rotate(0deg)" },
 });
 
-const ToolbarToogle = styled(Collapsible.Button, {
+const Toggle = styled(Collapsible.Button, {
   gridColumn: "2",
   margin: "$4",
   width: "40px",
@@ -52,13 +59,15 @@ const ToolbarToogle = styled(Collapsible.Button, {
   padding: "$1",
   borderRadius: "$md",
   backgroundColor: "$warmGray200",
-  animation: `${rotateRight} 200ms`,
 
-  '&[data-state="open"]': {
-    animation: `${rotateLeft} 200ms`,
-    animationFillMode: "forwards",
-    backgroundColor: "$primary200",
-  },
+  // "> *": {
+  //   animation: `${rotateRight} 300ms`,
+  // },
+
+  // '&[data-state="open"] > *': {
+  //   animation: `${rotateLeft} 300ms`,
+  //   animationFillMode: "forwards",
+  // },
 });
 
 const Header = styled("h2", {
@@ -69,11 +78,22 @@ const Header = styled("h2", {
 
 const NodeList = styled("div", { display: "grid", gap: "$4" });
 
+const sidebarAnimationVariants = {
+  open: { x: 0 },
+  closed: { x: "-80%" },
+};
+
+const arrowAnimationVariants = {
+  open: { rotate: 90 },
+  closed: { rotate: -90 },
+};
+
 type NewNodeToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
   css?: CSS;
 };
 
 export const NewNodeToolbar: React.FC<NewNodeToolbarProps> = ({ css }) => {
+  const [open, setOpen] = React.useState(false);
   const nodeTypes = useNodesStore((state) => state.nodeTypes);
   const options = Object.values(nodeTypes).map((nodeType) =>
     pick(nodeType, ["label", "color", "type", "width"])
@@ -87,25 +107,36 @@ export const NewNodeToolbar: React.FC<NewNodeToolbarProps> = ({ css }) => {
   const centerOfStage = getCenterOfStage(stageCoordinates, zoom);
 
   return (
-    <ToolbarRoot css={css}>
-      <ToolbarContent>
-        <Header css={{ marginBottom: "$4" }}>Neuen Knoten hinzufügen</Header>
-        <NodeList>
-          {options.map((option) => (
-            <ToolbarNode
-              key={option.label}
-              label={option.label}
-              color={option.color}
-              onClick={() => addNode(option.type, centerOfStage, nanoid(5))}
-            />
-          ))}
-        </NodeList>
-      </ToolbarContent>
-      <Tooltip content="Neuen Knoten hinzufügen" side="right">
-        <ToolbarToogle>
-          <ChevronRightOutline />
-        </ToolbarToogle>
-      </Tooltip>
-    </ToolbarRoot>
+    <Root css={css} open={open} onOpenChange={() => setOpen(!open)}>
+      <AnimationContainer
+        animate={open ? "open" : "closed"}
+        variants={sidebarAnimationVariants}
+        transition={{ duration: 0.3 }}
+      >
+        <Content forceMount>
+          <Header css={{ marginBottom: "$4" }}>Neuen Knoten hinzufügen</Header>
+          <NodeList>
+            {options.map((option) => (
+              <ToolbarNode
+                key={option.label}
+                label={option.label}
+                color={option.color}
+                onClick={() => addNode(option.type, centerOfStage, nanoid(5))}
+              />
+            ))}
+          </NodeList>
+        </Content>
+        <Tooltip content="Neuen Knoten hinzufügen" side="right">
+          <Toggle>
+            <motion.div
+              variants={arrowAnimationVariants}
+              animate={open ? "open" : "closed"}
+            >
+              <ChevronDownSolid />
+            </motion.div>
+          </Toggle>
+        </Tooltip>
+      </AnimationContainer>
+    </Root>
   );
 };

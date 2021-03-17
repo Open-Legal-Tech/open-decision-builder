@@ -10,6 +10,7 @@ import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
 import { ValidTreeNode } from "./types";
 import { identity, pipe } from "remeda";
+import { Link } from "react-router-dom";
 
 type TreeCard = { tree: ValidTreeNode };
 
@@ -40,7 +41,9 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => (
         >
           Archivieren
         </Button>
-        <Button outlined>Öffnen</Button>
+        <Button outlined as={Link} to="/builder">
+          Öffnen
+        </Button>
       </div>
     </div>
   </div>

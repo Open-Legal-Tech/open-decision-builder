@@ -1,13 +1,13 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { Layout } from "components";
-import { Builder } from "features";
+import { Builder, Dashboard, LoginCard, ProtectedRoute } from "features";
 import "./index.css";
 
 export const App: React.FC = () => {
   return (
     <Switch>
-      {/* <ProtectedRoute path={["/", "/dashboard"]} exact>
+      <ProtectedRoute path={["/", "/dashboard"]} exact>
         <Layout>
           <Dashboard />
         </Layout>
@@ -17,9 +17,9 @@ export const App: React.FC = () => {
         <div className="flex justify-center items-center h-screen">
           <LoginCard />
         </div>
-      </Route> */}
+      </Route>
 
-      <Route path="/">
+      <Route path="/builder">
         <Layout>
           <Builder />
         </Layout>
