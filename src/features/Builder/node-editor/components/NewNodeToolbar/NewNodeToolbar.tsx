@@ -7,6 +7,7 @@ import { nanoid } from "nanoid/non-secure";
 import { coordinates } from "../../types";
 import { CSS, styled, keyframes } from "utils/stitches.config";
 import { ChevronRightOutline } from "@graywolfai/react-heroicons";
+import { Tooltip } from "components";
 
 const turnNumberIntoOpposite = (number: number) =>
   number > 0 ? -number : Math.abs(number);
@@ -27,9 +28,10 @@ const ToolbarRoot = styled(Collapsible.Root, {
 const ToolbarContent = styled(Collapsible.Content, {
   gridColumn: "1",
   backgroundColor: "white",
-  width: "400px",
+  width: "300px",
   padding: "$4",
   height: "100%",
+  boxShadow: "$xl",
 });
 
 const rotateLeft = keyframes({
@@ -55,8 +57,17 @@ const ToolbarToogle = styled(Collapsible.Button, {
   '&[data-state="open"]': {
     animation: `${rotateLeft} 200ms`,
     animationFillMode: "forwards",
+    backgroundColor: "$primary200",
   },
 });
+
+const Header = styled("h2", {
+  fontSize: "$md",
+  color: "$gray600",
+  fontWeight: "$semibold",
+});
+
+const NodeList = styled("div", { display: "grid", gap: "$4" });
 
 type NewNodeToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
   css?: CSS;
@@ -78,18 +89,23 @@ export const NewNodeToolbar: React.FC<NewNodeToolbarProps> = ({ css }) => {
   return (
     <ToolbarRoot css={css}>
       <ToolbarContent>
-        {options.map((option) => (
-          <ToolbarNode
-            key={option.label}
-            label={option.label}
-            color={option.color}
-            onClick={() => addNode(option.type, centerOfStage, nanoid(5))}
-          />
-        ))}
+        <Header css={{ marginBottom: "$4" }}>Neuen Knoten hinzufügen</Header>
+        <NodeList>
+          {options.map((option) => (
+            <ToolbarNode
+              key={option.label}
+              label={option.label}
+              color={option.color}
+              onClick={() => addNode(option.type, centerOfStage, nanoid(5))}
+            />
+          ))}
+        </NodeList>
       </ToolbarContent>
-      <ToolbarToogle>
-        <ChevronRightOutline />
-      </ToolbarToogle>
+      <Tooltip content="Neuen Knoten hinzufügen" side="right">
+        <ToolbarToogle>
+          <ChevronRightOutline />
+        </ToolbarToogle>
+      </Tooltip>
     </ToolbarRoot>
   );
 };

@@ -8,3 +8,4 @@ export * from "./Field";
 export * from "./Badge";
 export * from "./Input";
 export * from "./FileInput";
+export * from "./Tooltip";
