@@ -8,6 +8,7 @@ type SidebarState = {
   open: boolean;
   nodeId: string;
   nodeType: string;
+  toggleSidebar: () => void;
   openSidebar: (nodeId: string, nodeType: string) => void;
   closeSidebar: () => void;
 };
@@ -16,6 +17,7 @@ export const useSidebarState = create<SidebarState>((set) => ({
   open: false,
   nodeId: "",
   nodeType: "",
+  toggleSidebar: () => set((state) => ({ open: !state.open })),
   openSidebar: (nodeId, nodeType) => set({ open: true, nodeId, nodeType }),
   closeSidebar: () => set({ open: false, nodeId: "", nodeType: "" }),
 }));
@@ -27,10 +29,16 @@ type NodeEditingSidebarProps = React.HTMLAttributes<HTMLDivElement> & {
 export const NodeEditingSidebar: React.FC<NodeEditingSidebarProps> = ({
   css,
 }) => {
-  const [nodeId, nodeType, isSidebarOpen] = useSidebarState((state) => [
+  const [
+    nodeId,
+    nodeType,
+    isSidebarOpen,
+    toggleSidebar,
+  ] = useSidebarState((state) => [
     state.nodeId,
     state.nodeType,
     state.open,
+    state.toggleSidebar,
   ]);
 
   const config = useNodesStore((state) => state.nodeTypes[nodeType]);
@@ -40,8 +48,14 @@ export const NodeEditingSidebar: React.FC<NodeEditingSidebarProps> = ({
   ]);
 
   return (
-    <RightSidebar css={css} title="Knoten bearbeiten" width={700}>
-      {isSidebarOpen ? (
+    <RightSidebar
+      css={css}
+      title="Knoten bearbeiten"
+      width={700}
+      open={isSidebarOpen}
+      onOpenChange={toggleSidebar}
+    >
+      {nodeId ? (
         <>
           <header className="flex justify-between items-stretch space-x-4">
             <input

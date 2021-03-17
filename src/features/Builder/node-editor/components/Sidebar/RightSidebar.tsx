@@ -23,17 +23,20 @@ export const RightSidebar: React.FC<SidebarProps> = ({
   title,
   tooltip,
   width,
+  open,
+  onOpenChange,
 }) => {
-  const [open, setOpen] = React.useState(false);
-  useKeyPressEvent("Escape", () => setOpen(false));
+  // useKeyPressEvent("Escape", onOpenChange);
 
   const sidebarAnimationVariants = {
     open: { x: "0" },
     closed: { x: `${width}px` },
   };
 
+  console.log(open);
+
   return (
-    <SidebarRoot css={css} open={open} onOpenChange={() => setOpen(!open)}>
+    <SidebarRoot css={css} open={open} onOpenChange={onOpenChange}>
       <AnimationContainer
         animate={open ? "open" : "closed"}
         initial="closed"
