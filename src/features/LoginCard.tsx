@@ -1,8 +1,7 @@
 import React from "react";
 import { Button, Field, Logo } from "components";
-import { LocationState } from "internalTypes";
 import { useAuthMethods } from "features";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "utils/stitches.config";
 
@@ -93,7 +92,7 @@ const LoginForm: React.FunctionComponent = () => {
         type="submit"
         onClick={(event) => {
           event.preventDefault();
-          login({ email, password }, () => navigate("/"));
+          login({ email, password }, () => navigate("/", { replace: true }));
         }}
       >
         Log-In
@@ -166,7 +165,7 @@ const SignupForm: React.FunctionComponent = () => {
         onClick={(event) => {
           event.preventDefault();
           signup({ email, password1, password2, username: name }, () =>
-            navigate("/")
+            navigate("/", { replace: true })
           );
         }}
       >
