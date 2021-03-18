@@ -4,6 +4,5 @@ export * from "./Auth/SignupButton";
 export * from "./Auth/AuthContext";
 export * from "./Builder/Builder";
 export * from "./Dashboard/Dashboard";
-export * from "./Routing/ProtectedRoute";
 export * from "./LoginCard";
 export * from "./Data/DataFetchingClient";

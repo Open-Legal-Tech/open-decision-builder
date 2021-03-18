@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Field, Logo } from "components";
 import { LocationState } from "internalTypes";
 import { useAuthMethods } from "features";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "utils/stitches.config";
 
@@ -57,12 +57,7 @@ const LoginForm: React.FunctionComponent = () => {
   const [password, setPassword] = React.useState("fogmub-bifaj-sarjo8");
   const { login } = useAuthMethods();
 
-  const history = useHistory();
-  const location = useLocation<LocationState>();
-
-  const { from } = location.state || {
-    from: { pathname: "/" },
-  };
+  const navigate = useNavigate();
 
   return (
     <form className="flex flex-col">
@@ -98,7 +93,7 @@ const LoginForm: React.FunctionComponent = () => {
         type="submit"
         onClick={(event) => {
           event.preventDefault();
-          login({ email, password }, () => history.replace(from));
+          login({ email, password }, () => navigate("/"));
         }}
       >
         Log-In
@@ -114,7 +109,7 @@ const SignupForm: React.FunctionComponent = () => {
   const [password2, setPassword2] = React.useState("");
   const { signup } = useAuthMethods();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <form className="flex flex-col">
@@ -171,7 +166,7 @@ const SignupForm: React.FunctionComponent = () => {
         onClick={(event) => {
           event.preventDefault();
           signup({ email, password1, password2, username: name }, () =>
-            history.replace("/")
+            navigate("/")
           );
         }}
       >
