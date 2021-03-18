@@ -130,7 +130,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         overflow: "hidden",
       }}
     >
-      <NewNodeSidebar css={{ gridColumn: "1 / 2", gridRow: "1", zIndex: 1 }} />
       <Stage
         disablePan={disablePan}
         disableZoom={disableZoom}
@@ -139,9 +138,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         <ConnectionsWrapper />
         <Nodes />
       </Stage>
-      <NodeEditingSidebar
-        css={{ gridColumn: "3 / 4", gridRow: "1", zIndex: 1 }}
-      />
+      <NewNodeSidebar css={{ gridColumn: "1 / 2", gridRow: "1" }} />
+      <NodeEditingSidebar css={{ gridColumn: "3 / 4", gridRow: "1" }} />
     </div>
   );
 };

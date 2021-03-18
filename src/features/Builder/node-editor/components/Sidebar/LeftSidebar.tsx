@@ -33,7 +33,11 @@ export const LeftSidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <SidebarRoot css={css} open={open} onOpenChange={() => setOpen(!open)}>
+    <SidebarRoot
+      css={{ zIndex: open ? "1" : "initial", ...css }}
+      open={open}
+      onOpenChange={() => setOpen(!open)}
+    >
       <AnimationContainer
         animate={open ? "open" : "closed"}
         initial="closed"

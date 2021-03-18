@@ -7,10 +7,10 @@ import {
   Toggle,
   SidebarRoot,
 } from "./shared";
-import { useKeyPressEvent } from "react-use";
 import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { Tooltip } from "components";
 import { motion } from "framer-motion";
+import { useKeyPressEvent } from "react-use";
 
 const arrowAnimationVariants = {
   open: { rotate: -90 },
@@ -26,17 +26,19 @@ export const RightSidebar: React.FC<SidebarProps> = ({
   open,
   onOpenChange,
 }) => {
-  // useKeyPressEvent("Escape", onOpenChange);
+  useKeyPressEvent("Escape", () => onOpenChange());
 
   const sidebarAnimationVariants = {
     open: { x: "0" },
     closed: { x: `${width}px` },
   };
 
-  console.log(open);
-
   return (
-    <SidebarRoot css={css} open={open} onOpenChange={onOpenChange}>
+    <SidebarRoot
+      css={{ zIndex: open ? "1" : "initial", ...css }}
+      open={open}
+      onOpenChange={onOpenChange}
+    >
       <AnimationContainer
         animate={open ? "open" : "closed"}
         initial="closed"
