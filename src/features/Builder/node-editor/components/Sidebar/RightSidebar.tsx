@@ -26,7 +26,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({
   open,
   onOpenChange,
 }) => {
-  useKeyPressEvent("Escape", () => onOpenChange());
+  useKeyPressEvent("Escape", () => (onOpenChange ? onOpenChange(false) : null));
 
   const sidebarAnimationVariants = {
     open: { x: "0" },
