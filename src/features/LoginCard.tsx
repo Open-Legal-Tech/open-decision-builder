@@ -1,9 +1,10 @@
 import React from "react";
 import { Button, Field, Logo } from "components";
-import { useAuthMethods } from "features";
 import { useNavigate } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "utils/stitches.config";
+import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
+import { useQueryClient } from "react-query";
 
 const TabList = styled(Tabs.List, {
   display: "flex",
@@ -54,9 +55,15 @@ export const LoginCard: React.FunctionComponent = () => {
 const LoginForm: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("test@outlook.com");
   const [password, setPassword] = React.useState("fogmub-bifaj-sarjo8");
-  const { login } = useAuthMethods();
-
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
+  const loginMutation = useLogin_UserMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries("USER");
+      navigate("/", { replace: true });
+    },
+  });
 
   return (
     <form className="flex flex-col">
@@ -92,7 +99,7 @@ const LoginForm: React.FunctionComponent = () => {
         type="submit"
         onClick={(event) => {
           event.preventDefault();
-          login({ email, password }, () => navigate("/", { replace: true }));
+          loginMutation.mutate({ email, password });
         }}
       >
         Log-In
@@ -106,7 +113,14 @@ const SignupForm: React.FunctionComponent = () => {
   const [name, setName] = React.useState("");
   const [password1, setPassword1] = React.useState("");
   const [password2, setPassword2] = React.useState("");
-  const { signup } = useAuthMethods();
+
+  const queryClient = useQueryClient();
+  const registerMutation = useRegister_UserMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries("USER");
+      navigate("/", { replace: true });
+    },
+  });
 
   const navigate = useNavigate();
 
@@ -164,9 +178,12 @@ const SignupForm: React.FunctionComponent = () => {
         type="submit"
         onClick={(event) => {
           event.preventDefault();
-          signup({ email, password1, password2, username: name }, () =>
-            navigate("/", { replace: true })
-          );
+          registerMutation.mutate({
+            email,
+            password1,
+            password2,
+            username: name,
+          });
         }}
       >
         Registrieren

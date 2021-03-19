@@ -1,30 +1,38 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Layout } from "components";
-import { Builder, Dashboard, LoginCard, useAuth } from "features";
+import { Builder, Dashboard, LoginCard } from "features";
 import "./index.css";
+import { useRefresh_TokenMutation, useUserQuery } from "internalTypes";
 
 //There are two versions of the App based around the auth state.
 //If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp, which is currently just the LoginCard.
 export const App: React.FC = () => {
-  const { token } = useAuth();
+  //When refreshing the jwt cookie is discarded. We use the refresh cookie
+  //to get a new cookie so all queries are authenticated when the user is logged in.
+  const auth = useRefresh_TokenMutation();
+  React.useEffect(() => auth.mutate({}), []);
 
-  return token ? <AuthenticatedApp /> : <UnathenticatedApp />;
+  const user = useUserQuery();
+
+  return user.data?.me?.email ? <AuthenticatedApp /> : <UnathenticatedApp />;
 };
 
-const UnathenticatedApp: React.FC = () => (
-  <Routes>
-    {/* Login path. */}
-    <Route
-      path="/"
-      element={
-        <div className="flex justify-center items-center h-screen">
-          <LoginCard />
-        </div>
-      }
-    />
-  </Routes>
-);
+const UnathenticatedApp: React.FC = () => {
+  return (
+    <Routes>
+      {/* Login path. */}
+      <Route
+        path="/"
+        element={
+          <div className="flex justify-center items-center h-screen">
+            <LoginCard />
+          </div>
+        }
+      />
+    </Routes>
+  );
+};
 
 const AuthenticatedApp: React.FC = () => (
   <Routes>
