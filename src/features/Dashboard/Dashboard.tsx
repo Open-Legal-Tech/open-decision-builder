@@ -1,23 +1,12 @@
 import React from "react";
-import { PlusCircleOutline } from "@graywolfai/react-heroicons";
-import {
-  useAll_TreesQuery,
-  useCreate_TreeMutation,
-  useUserQuery,
-} from "internalTypes";
+import { useAll_TreesQuery, useUserQuery } from "internalTypes";
 import { TreeList } from "./TreeList";
 import { validateTreeData } from "./dataValidation";
-import { Button } from "components";
-import { useQueryClient } from "react-query";
+import { NewTreeButton } from "./NewTreeButton";
 
 export const Dashboard: React.FunctionComponent = () => {
   const user = useUserQuery();
   const allTrees = useAll_TreesQuery({}, { select: validateTreeData });
-
-  const queryClient = useQueryClient();
-  const createTreeMutation = useCreate_TreeMutation({
-    onSuccess: () => queryClient.invalidateQueries("ALL_TREES"),
-  });
 
   return (
     <div className="dashboard-grid">
@@ -25,17 +14,7 @@ export const Dashboard: React.FunctionComponent = () => {
         <h2 className="text-5xl mb-6">
           Hallo {user.data?.me?.username ?? "Dirk Lawyer"}
         </h2>
-        <Button
-          outlined
-          className="my-8"
-          size="xLarge"
-          onClick={() =>
-            createTreeMutation.mutate({ input: { name: "Hallo Max" } })
-          }
-        >
-          <PlusCircleOutline className="w-8 mr-2 inline" />
-          Neue Anwendung erstellen
-        </Button>
+        <NewTreeButton />
       </div>
 
       <div className="col-start-2 row-start-2 mx-4 md:mx-8">
