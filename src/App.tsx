@@ -11,12 +11,11 @@ import { useAuthStore } from "features/Data/AuthState";
 export const App: React.FC = () => {
   //When refreshing the jwt cookie is discarded. We use the refresh cookie
   //to get a new cookie so all queries are authenticated when the user is logged in.
-  const [token, login, logout, client, state] = useAuthStore((state) => [
+  const [token, login, logout, client] = useAuthStore((state) => [
     state.token,
     state.login,
     state.logout,
     state.client,
-    state,
   ]);
 
   const auth = useRefresh_TokenMutation(client, {
@@ -25,7 +24,9 @@ export const App: React.FC = () => {
       refreshToken ? login({ ...refreshToken }) : logout(),
   });
 
-  React.useEffect(() => auth.mutate({}));
+  //We get the mutate function specifically so we only depend on it in the Effect.
+  const { mutate: getToken } = auth;
+  React.useEffect(() => getToken({}), [getToken]);
 
   return auth.isLoading ? (
     <p>Loading ...</p>
