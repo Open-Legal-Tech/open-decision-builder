@@ -10,12 +10,7 @@ generates:
       - "typescript-operations"
       - "typescript-react-query"
     config:
-      fetcher:
-        endpoint: https://builder.open-decision.org/graphql
-        fetchParams:
-          credentials: "include"
-          headers:
-            "Content-Type": "application/json"
+      fetcher: graphql-request
   src/types/generated/graphql.schema.json:
     plugins:
       - "introspection"
