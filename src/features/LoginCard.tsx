@@ -55,7 +55,7 @@ export const LoginCard: React.FunctionComponent = () => {
 
 const LoginForm: React.FunctionComponent = () => {
   const [email, setEmail] = React.useState("test@outlook.com");
-  const [password, setPassword] = React.useState("fogmub-bifaj-sarjo8");
+  const [password, setPassword] = React.useState(import.meta.env.PASSWORD);
   const navigate = useNavigate();
 
   const [login, client, logout] = useAuthStore((state) => [
