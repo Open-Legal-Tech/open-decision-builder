@@ -19,13 +19,7 @@ export type NotificationState = {
 
 export const useNotificationStore = create<NotificationState>(
   devtools((set) => ({
-    notifications: {
-      sdfgs346: {
-        content: "This is a test notification!",
-        title: "Test",
-        variant: "neutral",
-      },
-    },
+    notifications: {},
     addNotification: (notification) =>
       set(
         produce((state: NotificationState) => {
