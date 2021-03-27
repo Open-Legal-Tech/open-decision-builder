@@ -5,7 +5,7 @@ module.exports = {
   plugins: [
     "@snowpack/plugin-react-refresh",
     // "@snowpack/plugin-typescript",
-    "@canarise/snowpack-eslint-plugin",
+    // "@canarise/snowpack-eslint-plugin",
     [
       "@snowpack/plugin-build-script",
       {
