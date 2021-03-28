@@ -37,8 +37,7 @@ const Content = styled(DropdownMenu.Content, {
 type UserMenuProps = { imgSrc?: string };
 
 export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
-  const [refreshToken, logout, client] = useAuthStore((state) => [
-    state.refreshToken,
+  const [logout, client] = useAuthStore((state) => [
     state.logout,
     state.client,
   ]);
@@ -65,11 +64,14 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
         <Item as={Link} to="./settings">
           Einstellungen
         </Item>
-        {refreshToken ? (
-          <Button onClick={() => logoutMutation.mutate({ refreshToken })}>
-            Logout
-          </Button>
-        ) : null}
+
+        <Button
+          onClick={() => {
+            logoutMutation.mutate({});
+          }}
+        >
+          Logout
+        </Button>
       </Content>
     </DropdownMenu.Root>
   );

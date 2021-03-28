@@ -10,7 +10,7 @@ import { useTokenRefresh } from "utils/useTokenRefresh";
 export const App: React.FC = () => {
   const loginStatus = useTokenRefresh();
 
-  return loginStatus === "loading" ? null : loginStatus === "loggedIn" ? (
+  return loginStatus === "undetermined" ? null : loginStatus === "loggedIn" ? (
     <AuthenticatedApp />
   ) : (
     <UnathenticatedApp />
@@ -25,7 +25,7 @@ const UnathenticatedApp: React.FC = () => {
         path="/"
         element={
           <Layout>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center h-full">
               <LoginCard />
             </div>
           </Layout>

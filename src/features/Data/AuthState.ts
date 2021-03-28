@@ -2,56 +2,49 @@ import create from "zustand";
 import { devtools } from "zustand/middleware";
 import { GraphQLClient } from "graphql-request";
 
-type loggedOut = {
-  status: "loggedOut";
-  token: undefined;
-  refreshExpiresIn: undefined;
-  refreshToken: undefined;
-};
+const getRefreshToken = async (client: GraphQLClient) => {
+  const { refreshToken } = await client.request<{
+    refreshToken: { token: string };
+  }>(`mutation REFRESH_TOKEN {
+    refreshToken {
+      token
+    }
+  }`);
 
-type loggedIn = {
-  status: "loggedIn";
-  token: string;
-  refreshExpiresIn: number;
-  refreshToken: string;
+  return refreshToken;
 };
+export type loginStatus = "loggedIn" | "loggedOut" | "undetermined";
 
-type authState = (loggedOut | loggedIn) & {
+type authState = {
+  status: loginStatus;
   client: GraphQLClient;
 };
 
 type AuthState = authState & {
-  login: (authState: Omit<loggedIn, "status">) => void;
+  login: () => void;
   logout: () => void;
 };
 
 export const useAuthStore = create<AuthState>(
   devtools(
-    (set) => ({
-      status: "loggedOut",
-      token: undefined,
-      refreshExpiresIn: undefined,
-      refreshToken: undefined,
+    (set, get) => ({
+      status: "undetermined",
       client: new GraphQLClient(
         "https://od-backend-dev.herokuapp.com/graphql",
         { credentials: "include" }
       ),
-      login: (authState) =>
+      login: async () => {
+        const authState = await getRefreshToken(get().client);
+
         set((state) => {
           state.client.setHeader("authorization", `JWT ${authState.token}`);
-
-          return { status: "loggedIn", ...authState };
-        }),
+          return { status: "loggedIn" };
+        });
+      },
       logout: () =>
         set((state) => {
           state.client.setHeader("authorization", "");
-
-          return {
-            status: "loggedOut",
-            token: undefined,
-            refreshExpiresIn: undefined,
-            refreshToken: undefined,
-          };
+          return { status: "loggedOut" };
         }),
     }),
     "Auth"

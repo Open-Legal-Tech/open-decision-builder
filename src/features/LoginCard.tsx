@@ -66,14 +66,11 @@ const LoginForm: React.FunctionComponent = () => {
 
   const queryClient = useQueryClient();
   const loginMutation = useLogin_UserMutation(client, {
-    onSuccess: ({ tokenAuth }) => {
-      if (tokenAuth) {
-        login(tokenAuth);
-        queryClient.invalidateQueries("USER");
-        navigate("/", { replace: true });
-      } else {
-        logout();
-      }
+    onError: () => logout(),
+    onSuccess: () => {
+      login();
+      queryClient.invalidateQueries("USER");
+      navigate("/", { replace: true });
     },
   });
 
