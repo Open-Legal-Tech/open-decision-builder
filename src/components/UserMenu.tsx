@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
@@ -6,6 +6,8 @@ import { styled } from "utils/stitches.config";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "features/Data/AuthState";
 import { Button } from "./Button";
+import { AuthServiceContext } from "features/Data/authStateMachine";
+import { useService } from "@xstate/react";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
 const StyledAvatar = styled(Avatar.Root, {
@@ -36,7 +38,9 @@ const Content = styled(DropdownMenu.Content, {
 type UserMenuProps = { imgSrc?: string };
 
 export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
-  const [logout] = useAuthStore((state) => [state.logout]);
+  const authService = useContext(AuthServiceContext);
+  const [state, send] = useService(authService);
+  // const [logout] = useAuthStore((state) => [state.logout]);
 
   return (
     <DropdownMenu.Root>
@@ -56,8 +60,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
         <Item as={Link} to="./settings">
           Einstellungen
         </Item>
-
-        <Button onClick={() => logout()}>Logout</Button>
+        {state.matches("loggedIn") && (
+          <Button onClick={() => send("Logout")}>Logout</Button>
+        )}
       </Content>
     </DropdownMenu.Root>
   );

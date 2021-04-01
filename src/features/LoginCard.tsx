@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Field, Logo } from "components";
 import { useNavigate } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
@@ -6,6 +6,8 @@ import { styled } from "utils/stitches.config";
 import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
 import { useQueryClient } from "react-query";
 import { useAuthStore } from "./Data/AuthState";
+import { AuthServiceContext } from "./Data/authStateMachine";
+import { useService } from "@xstate/react";
 
 const TabList = styled(Tabs.List, {
   display: "flex",
@@ -58,17 +60,14 @@ const LoginForm: React.FunctionComponent = () => {
   const [password, setPassword] = React.useState("");
   const navigate = useNavigate();
 
-  const [login, client, logout] = useAuthStore((state) => [
-    state.login,
-    state.client,
-    state.logout,
-  ]);
+  const authService = useContext(AuthServiceContext);
+  const [state, send] = useService(authService);
 
   const queryClient = useQueryClient();
-  const loginMutation = useLogin_UserMutation(client, {
-    onError: () => logout(),
+  const loginMutation = useLogin_UserMutation(state.context.client, {
+    onError: () => send("Logout"),
     onSuccess: () => {
-      login();
+      send("Login");
       queryClient.invalidateQueries("USER");
       navigate("/", { replace: true });
     },

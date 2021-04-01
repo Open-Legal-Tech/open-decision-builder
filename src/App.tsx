@@ -3,21 +3,32 @@ import { Routes, Route } from "react-router-dom";
 import { Layout, MainContent } from "components";
 import { Builder, Dashboard, LoginCard } from "features";
 import "./index.css";
-import { useTokenRefresh } from "utils/useTokenRefresh";
+import { useMachine } from "@xstate/react";
+import {
+  AuthServiceContext,
+  authStateMachine,
+} from "features/Data/authStateMachine";
 
 //There are two versions of the App based around the auth state.
-//If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp, which is currently just the LoginCard.
+//If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp.
 export const App: React.FC = () => {
-  const loginStatus = useTokenRefresh();
+  // const loginStatus = useTokenRefresh();
+  const [state, _send, service] = useMachine(authStateMachine);
 
-  return loginStatus === "undetermined" ? null : loginStatus === "loggedIn" ? (
-    <AuthenticatedApp />
-  ) : (
-    <UnathenticatedApp />
+  console.log(state.value);
+
+  return (
+    <AuthServiceContext.Provider value={service}>
+      {state.matches("loggedIn") ? (
+        <AuthenticatedApp />
+      ) : (
+        <UnauthenticatedApp />
+      )}
+    </AuthServiceContext.Provider>
   );
 };
 
-const UnathenticatedApp: React.FC = () => {
+const UnauthenticatedApp: React.FC = () => {
   return (
     <Routes>
       {/* Login path. */}
