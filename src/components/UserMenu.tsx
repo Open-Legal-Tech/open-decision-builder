@@ -5,7 +5,6 @@ import { UserCircleOutline } from "@graywolfai/react-heroicons";
 import { styled } from "utils/stitches.config";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "features/Data/AuthState";
-import { useLogout_UserMutation } from "internalTypes";
 import { Button } from "./Button";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
@@ -37,14 +36,7 @@ const Content = styled(DropdownMenu.Content, {
 type UserMenuProps = { imgSrc?: string };
 
 export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
-  const [logout, client] = useAuthStore((state) => [
-    state.logout,
-    state.client,
-  ]);
-
-  const logoutMutation = useLogout_UserMutation(client, {
-    onSuccess: () => logout(),
-  });
+  const [logout] = useAuthStore((state) => [state.logout]);
 
   return (
     <DropdownMenu.Root>
@@ -65,13 +57,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
           Einstellungen
         </Item>
 
-        <Button
-          onClick={() => {
-            logoutMutation.mutate({});
-          }}
-        >
-          Logout
-        </Button>
+        <Button onClick={() => logout()}>Logout</Button>
       </Content>
     </DropdownMenu.Root>
   );

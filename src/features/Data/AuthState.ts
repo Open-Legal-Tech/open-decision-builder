@@ -13,6 +13,17 @@ const getRefreshToken = async (client: GraphQLClient) => {
 
   return refreshToken;
 };
+
+const removeTokenCookies = async (client: GraphQLClient) =>
+  await client.request(`mutation DELETE_COOKIE {
+    deleteRefreshTokenCookie {
+      deleted
+    }
+    deleteTokenCookie {
+      deleted
+    }
+  }`);
+
 export type loginStatus = "loggedIn" | "loggedOut" | "undetermined";
 
 type authState = {
@@ -41,11 +52,14 @@ export const useAuthStore = create<AuthState>(
           return { status: "loggedIn" };
         });
       },
-      logout: () =>
+      logout: async () => {
+        await removeTokenCookies(get().client);
+
         set((state) => {
           state.client.setHeader("authorization", "");
           return { status: "loggedOut" };
-        }),
+        });
+      },
     }),
     "Auth"
   )
