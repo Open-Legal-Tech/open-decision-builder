@@ -12,10 +12,7 @@ import {
 //There are two versions of the App based around the auth state.
 //If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp.
 export const App: React.FC = () => {
-  // const loginStatus = useTokenRefresh();
   const [state, _send, service] = useMachine(authStateMachine);
-
-  console.log(state.value);
 
   return (
     <AuthServiceContext.Provider value={service}>
