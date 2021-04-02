@@ -3,25 +3,18 @@ import { Routes, Route } from "react-router-dom";
 import { Layout, MainContent } from "components";
 import { Builder, Dashboard, LoginCard } from "features";
 import "./index.css";
-import { useMachine } from "@xstate/react";
-import {
-  AuthServiceContext,
-  authStateMachine,
-} from "features/Data/authStateMachine";
+import { authService } from "features/Data/authStateMachine";
+import { useService } from "@xstate/react";
 
 //There are two versions of the App based around the auth state.
 //If the user is authenticated he gets the AuthenticatedApp if not he gets the UnatuhenticatedApp.
 export const App: React.FC = () => {
-  const [state, _send, service] = useMachine(authStateMachine);
+  const [state] = useService(authService);
 
-  return (
-    <AuthServiceContext.Provider value={service}>
-      {state.matches("loggedIn") ? (
-        <AuthenticatedApp />
-      ) : (
-        <UnauthenticatedApp />
-      )}
-    </AuthServiceContext.Provider>
+  return state.matches("loggedIn") ? (
+    <AuthenticatedApp />
+  ) : (
+    <UnauthenticatedApp />
   );
 };
 

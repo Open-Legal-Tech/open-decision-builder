@@ -1,12 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Avatar from "@radix-ui/react-avatar";
 import { UserCircleOutline } from "@graywolfai/react-heroicons";
 import { styled } from "utils/stitches.config";
 import { Link } from "react-router-dom";
-import { useAuthStore } from "features/Data/AuthState";
 import { Button } from "./Button";
-import { AuthServiceContext } from "features/Data/authStateMachine";
+import { authService } from "features/Data/authStateMachine";
 import { useService } from "@xstate/react";
 
 const Trigger = styled(DropdownMenu.Trigger, {});
@@ -38,9 +37,7 @@ const Content = styled(DropdownMenu.Content, {
 type UserMenuProps = { imgSrc?: string };
 
 export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
-  const authService = useContext(AuthServiceContext);
   const [state, send] = useService(authService);
-  // const [logout] = useAuthStore((state) => [state.logout]);
 
   return (
     <DropdownMenu.Root>

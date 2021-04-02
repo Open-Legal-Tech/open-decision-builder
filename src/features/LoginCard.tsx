@@ -1,12 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Button, Field, Logo } from "components";
 import { useNavigate } from "react-router-dom";
 import * as Tabs from "@radix-ui/react-tabs";
 import { styled } from "utils/stitches.config";
 import { useLogin_UserMutation, useRegister_UserMutation } from "internalTypes";
 import { useQueryClient } from "react-query";
-import { useAuthStore } from "./Data/AuthState";
-import { AuthServiceContext } from "./Data/authStateMachine";
+import { authService } from "./Data/authStateMachine";
 import { useService } from "@xstate/react";
 
 const TabList = styled(Tabs.List, {
@@ -60,9 +59,7 @@ const LoginForm: React.FunctionComponent = () => {
   const [password, setPassword] = React.useState("");
   const navigate = useNavigate();
 
-  const authService = useContext(AuthServiceContext);
   const [state, send] = useService(authService);
-
   const queryClient = useQueryClient();
   const loginMutation = useLogin_UserMutation(state.context.client, {
     onError: () => send("Logout"),
@@ -125,8 +122,8 @@ const SignupForm: React.FunctionComponent = () => {
   const [password2, setPassword2] = React.useState("");
 
   const queryClient = useQueryClient();
-  const client = useAuthStore((state) => state.client);
-  const registerMutation = useRegister_UserMutation(client, {
+  const [state] = useService(authService);
+  const registerMutation = useRegister_UserMutation(state.context.client, {
     onSuccess: () => {
       queryClient.invalidateQueries("USER");
       navigate("/", { replace: true });
