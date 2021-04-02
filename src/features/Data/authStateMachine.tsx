@@ -1,7 +1,7 @@
 import { GraphQLClient } from "graphql-request";
 import { createMachine, interpret } from "xstate";
 
-const client = new GraphQLClient("http://localhost:8010/proxy/graphql", {
+const client = new GraphQLClient(`${import.meta.env.API_URL}/graphql`, {
   credentials: "include",
 });
 

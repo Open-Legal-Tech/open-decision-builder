@@ -1,6 +1,9 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
 
 module.exports = {
+  env: {
+    API_URL: "http://localhost:8010/proxy"
+  },
   mount: { public: { url: "/", static: true }, src: { url: "/dist" } },
   plugins: [
     "@snowpack/plugin-react-refresh",
