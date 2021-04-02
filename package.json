@@ -10,7 +10,7 @@
   "scripts": {
     "proxy:dev": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
     "proxy:build": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:5000 --credentials",
-    "start": "npm run codegen && SNOWPACK_PUBLI_API_URL=http://localhost:8010/proxy snowpack dev",
+    "start": "npm run codegen && SNOWPACK_PUBLIC_API_URL=http://localhost:8010/proxy snowpack dev",
     "typecheck": "tsc -w",
     "build": "npm run codegen && SNOWPACK_PUBLIC_API_URL=https://od-backend-dev.herokuapp.com snowpack build",
     "codegen": "graphql-codegen --config .codegen.yml",

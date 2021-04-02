@@ -23,7 +23,7 @@ const UnauthenticatedApp: React.FC = () => {
     <Routes>
       {/* Login path. */}
       <Route
-        path="/"
+        path="*"
         element={
           <Layout>
             <MainContent
