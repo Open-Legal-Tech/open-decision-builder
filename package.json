@@ -8,7 +8,8 @@
     "access": "public"
   },
   "scripts": {
-    "proxy": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
+    "proxy:dev": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
+    "proxy:build": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:5000 --credentials",
     "start": "npm run codegen && snowpack dev",
     "typecheck": "tsc -w",
     "build": "npm run codegen && snowpack build",
