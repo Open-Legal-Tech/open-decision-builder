@@ -8,7 +8,8 @@
     "access": "public"
   },
   "scripts": {
-    "start": "snowpack dev",
+    "proxy": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
+    "start": "npm run codegen && snowpack dev",
     "build": "npm run codegen && snowpack build",
     "codegen": "graphql-codegen --config .codegen.yml",
     "lint": "eslint src --ext ts,js,tsx,jsx",

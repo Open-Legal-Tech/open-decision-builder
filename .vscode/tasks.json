@@ -2,12 +2,24 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "start",
-      "problemMatcher": [],
-      "label": "npm: start",
-      "detail": "snowpack dev",
-      "runOptions": { "runOn": "folderOpen" }
+      "label": "Run dev environment",
+      "dependsOn": ["Run frontend app", "Run proxy"]
+    },
+    {
+      "label": "Run frontend app",
+      "type": "shell",
+      "command": "npm run start",
+      "presentation": {
+        "group": "dev environment"
+      }
+    },
+    {
+      "label": "Run proxy",
+      "type": "shell",
+      "command": "npm run proxy",
+      "presentation": {
+        "group": "dev environment"
+      }
     }
   ]
 }
