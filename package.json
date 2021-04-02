@@ -10,9 +10,10 @@
   "scripts": {
     "proxy": "lcp --proxyUrl https://od-backend-dev.herokuapp.com --origin http://localhost:3000 --credentials",
     "start": "npm run codegen && snowpack dev",
+    "typecheck": "tsc -w",
     "build": "npm run codegen && snowpack build",
     "codegen": "graphql-codegen --config .codegen.yml",
-    "lint": "eslint src --ext ts,js,tsx,jsx",
+    "lint": "eslint src --ext ts,js,tsx,jsx -w",
     "clean": "rimraf dist *.tsbuildinfo",
     "storybook": "start-storybook -p 6006 --ci",
     "build-storybook": "npm run codegen && build-storybook"

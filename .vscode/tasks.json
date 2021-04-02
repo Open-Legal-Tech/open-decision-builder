@@ -2,23 +2,39 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Run dev environment",
-      "dependsOn": ["Run frontend app", "Run proxy"]
+      "label": "Dev Environment",
+      "dependsOn": ["Frontend App", "Proxy Server"],
+      "presentation": {
+        "reveal": "silent",
+        "showReuseMessage": false,
+        "clear": true
+      },
+      "runOptions": { "runOn": "folderOpen" }
     },
     {
-      "label": "Run frontend app",
-      "type": "shell",
-      "command": "npm run start",
+      "label": "Checks in Dev Environment",
+      "dependsOn": ["Typecheck", "Lint"],
       "presentation": {
-        "group": "dev environment"
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
       }
     },
     {
-      "label": "Run proxy",
+      "label": "Frontend App",
+      "type": "shell",
+      "command": "npm run start",
+      "presentation": {
+        "group": "server"
+      }
+    },
+    {
+      "label": "Proxy Server",
       "type": "shell",
       "command": "npm run proxy",
       "presentation": {
-        "group": "dev environment"
+        "group": "server"
       }
     }
   ]
