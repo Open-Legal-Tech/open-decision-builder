@@ -6,14 +6,7 @@ module.exports = {
     "@snowpack/plugin-react-refresh",
     // "@snowpack/plugin-typescript",
     // "@canarise/snowpack-eslint-plugin",
-    [
-      "@snowpack/plugin-build-script",
-      {
-        cmd: "postcss",
-        input: [".css"],
-        output: [".css"],
-      },
-    ],
+    "@snowpack/plugin-postcss",
   ],
   routes: [{ match: "routes", src: ".*", dest: "/index.html" }],
   optimize: {
