@@ -1,14 +1,14 @@
 import { Button } from "components";
 import React from "react";
-import { parseISO, formatWithOptions } from "date-fns/esm/fp";
+import { parseISO, format } from "date-fns";
 import de from "date-fns/locale/de";
 import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { fuzzySearch, Search, sortByKey } from "./Filter";
 import { motion } from "framer-motion";
 import { ValidTreeNode } from "./types";
 import { identity, pipe } from "remeda";
-import { Link } from "react-router-dom";
 import { TreeTags } from "./TreeTags";
+import Link from "next/link";
 
 type TreeCard = { tree: ValidTreeNode };
 
@@ -21,8 +21,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
         <div className="space-y-2 flex-grow">
           <h3 className="text-4xl">{tree.name}</h3>
           <span className="text-gray-500 text-sm">
-            Erstellt am:{" "}
-            {formatWithOptions({ locale: de })("P")(parseISO(tree.createdAt))}
+            Erstellt am: {format(parseISO(tree.createdAt), "P", { locale: de })}
           </span>
         </div>
         <div className="self-end space-x-4">
@@ -40,7 +39,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
           <Button
             as={Link}
             outlined
-            to={`/builder/:${tree.id}`}
+            href={`/builder/${tree.id}`}
             css={{ display: "inline" }}
           >
             Öffnen
