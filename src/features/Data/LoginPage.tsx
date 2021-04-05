@@ -1,8 +1,7 @@
 import { MainContent } from "components";
 import { LoginCard } from "features";
-import React from "react";
 
-export default function Login() {
+export const LoginPage = () => {
   return (
     <MainContent
       css={{
@@ -14,4 +13,4 @@ export default function Login() {
       <LoginCard />
     </MainContent>
   );
-}
+};
