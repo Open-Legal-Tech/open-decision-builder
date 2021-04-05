@@ -37,6 +37,7 @@ const TreeCard: React.FC<TreeCard> = ({ tree }) => {
             Löschen
           </Button>
           <Button
+            // @ts-expect-error: stitches error
             as={Link}
             outlined
             href={`/builder/${tree.id}`}

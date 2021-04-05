@@ -51,9 +51,11 @@ export const UserMenu: React.FC<UserMenuProps> = ({ imgSrc }) => {
       </Trigger>
 
       <Content>
+        {/* @ts-expect-error: stitches error */}
         <Item as={Link} href="./profile">
           Profil
         </Item>
+        {/* @ts-expect-error: stitches error */}
         <Item as={Link} href="./settings">
           Einstellungen
         </Item>

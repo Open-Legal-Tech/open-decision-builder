@@ -33,7 +33,9 @@ export const LeftSidebar: React.FC<SidebarProps> = ({
   };
 
   return (
+    // @ts-expect-error: stitches error
     <SidebarRoot
+      // @ts-expect-error: stitches error
       css={{ zIndex: open ? "1" : "initial", ...css }}
       open={open}
       onOpenChange={() => setOpen(!open)}
