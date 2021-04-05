@@ -16,8 +16,8 @@
     "clean": "rimraf dist *.tsbuildinfo",
     "storybook": "start-storybook -p 6006 --ci",
     "build-storybook": "npm run codegen && build-storybook",
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run codegen && next dev",
+    "build": "npm run codegen && next build",
     "start": "next start"
   },
   "devDependencies": {
