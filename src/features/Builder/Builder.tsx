@@ -63,45 +63,41 @@ export const Builder: React.FC = () => {
   const [data, setData, setFile] = useFileReader<EditorState>();
   const [number, setNumber] = React.useState(10);
 
-  return (
-    <div className="relative min-h-0">
-      {data?.nodes ? (
-        <Editor state={data} setState={(value) => setData(value)} />
-      ) : (
-        <div className="h-full w-full flex justify-center items-center flex-col">
-          <div className="space-y-10">
-            <h1 className="text-5xl">Starte mit Testen!</h1>
+  return data?.nodes ? (
+    <Editor state={data} setState={(value) => setData(value)} />
+  ) : (
+    <div className="h-full w-full flex justify-center items-center flex-col">
+      <div className="space-y-10">
+        <h1 className="text-5xl">Starte mit Testen!</h1>
 
-            <div className="flex space-x-4">
-              <Input
-                type="number"
-                value={number}
-                onChange={(event) => setNumber(Number(event.target.value))}
-              />
-              <Button
-                variant="secondary"
-                outlined
-                onClick={() => setData(initialEditorState(number))}
-              >
-                <ChevronRightOutline className="w-6" />
-                Starten
-              </Button>
-            </div>
-
-            <p className="text-lg">
-              Es kann ein bestehender Datensatz importiert werden.
-              <FileInput
-                className="mt-4"
-                name="file"
-                accept=".json"
-                onChange={setFile}
-              >
-                Datei hochladen
-              </FileInput>
-            </p>
-          </div>
+        <div className="flex space-x-4">
+          <Input
+            type="number"
+            value={number}
+            onChange={(event) => setNumber(Number(event.target.value))}
+          />
+          <Button
+            variant="secondary"
+            outlined
+            onClick={() => setData(initialEditorState(number))}
+          >
+            <ChevronRightOutline className="w-6" />
+            Starten
+          </Button>
         </div>
-      )}
+
+        <p className="text-lg">
+          Es kann ein bestehender Datensatz importiert werden.
+          <FileInput
+            className="mt-4"
+            name="file"
+            accept=".json"
+            onChange={setFile}
+          >
+            Datei hochladen
+          </FileInput>
+        </p>
+      </div>
     </div>
   );
 };

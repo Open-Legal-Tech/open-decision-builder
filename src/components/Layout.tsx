@@ -11,7 +11,7 @@ const AppContainer = styled("div", {
   gridTemplateRows: "max-content 1fr",
 });
 
-const ContentContainer = styled("div", {
+const ContentContainer = styled("main", {
   display: "grid",
   gridTemplateColumns: "1fr 10fr 1fr",
 });
