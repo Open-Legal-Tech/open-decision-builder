@@ -1,7 +1,6 @@
 import React from "react";
 import { useGesture } from "react-use-gesture";
-import { useEditorStore } from "../../globalState";
-import clsx from "clsx";
+import { CSS, styled } from "utils/stitches.config";
 
 type StageProps = {
   /**
@@ -13,6 +12,7 @@ type StageProps = {
    */
   disableZoom: boolean;
   className?: string;
+  css?: CSS;
 };
 
 type Stage = React.FC<React.HTMLAttributes<HTMLDivElement> & StageProps>;
@@ -64,11 +64,8 @@ export const Stage: Stage = ({
   //------------------------------------------------------------------------
 
   return (
-    <div
-      className={clsx(
-        "overflow-hidden relative pattern-background outline-none",
-        className
-      )}
+    <StageContainer
+      className={className}
       tabIndex={-1}
       {...stageGestures()}
       {...props}
@@ -77,7 +74,7 @@ export const Stage: Stage = ({
       <div
         className="origin-center absolute left-1/2 top-1/2"
         style={{
-          transform: `translate(${coordinates[0]}px, ${coordinates[1]}px)`,
+          transform: `translate(${stageContext.coordinates[0]}px, ${stageContext.coordinates[1]}px)`,
         }}
       >
         {/* This inner wrapper is used to zoom.  */}
@@ -86,5 +83,6 @@ export const Stage: Stage = ({
         </div>
       </div>
     </div>
+    </StageContainer>
   );
 };
