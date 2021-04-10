@@ -1,8 +1,9 @@
 import React from "react";
-import { useNodesStore } from "../../globalState";
+import { useTreeStore } from "../../globalState";
 import { RightSidebar } from "./RightSidebar";
 import { CSS } from "utils/stitches.config";
 import create from "zustand";
+import shallow from "zustand/shallow";
 
 type SidebarState = {
   open: boolean;
@@ -42,11 +43,14 @@ export const NodeEditingSidebar: React.FC<NodeEditingSidebarProps> = ({
     state.toggleSidebar,
   ]);
 
-  const config = useNodesStore((state) => state.nodeTypes[nodeType]);
-  const [node, setNode] = useNodesStore((state) => [
-    state.nodes[nodeId],
-    state.setNode,
-  ]);
+  const [config, node, setNode] = useTreeStore(
+    (state) => [
+      state.data.nodeTypes[nodeType],
+      state.data.nodes[nodeId],
+      state.setNode,
+    ],
+    shallow
+  );
 
   return (
     <RightSidebar
@@ -64,7 +68,7 @@ export const NodeEditingSidebar: React.FC<NodeEditingSidebarProps> = ({
               style={{ borderColor: config.color }}
               value={node.name}
               onChange={(event) =>
-                setNode(nodeId, { name: event.target.value })
+                setNode({ id: nodeId, name: event.target.value })
               }
               maxLength={30}
             />

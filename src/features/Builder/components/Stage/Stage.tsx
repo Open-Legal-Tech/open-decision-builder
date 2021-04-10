@@ -1,6 +1,12 @@
+import { Tree } from "features/Builder";
+import { useEditorStore, useTreeStore } from "features/Builder/globalState";
 import React from "react";
 import { useGesture } from "react-use-gesture";
 import { CSS, styled } from "utils/stitches.config";
+import shallow from "zustand/shallow";
+import { ExistingConnection } from "../Connections/ExisitingConnection";
+import { Node } from "../Node/Node";
+
 const StageContainer = styled("div", {
   overflow: "hidden",
   position: "relative",
@@ -10,7 +16,10 @@ const StageContainer = styled("div", {
     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E\")",
 });
 
+StageContainer.displayName = "StageContainer";
+
 type StageProps = {
+  tree: Tree;
   /**
    * Setting this to false disables panning in the Editor.
    */
@@ -29,23 +38,44 @@ type Stage = React.FC<React.HTMLAttributes<HTMLDivElement> & StageProps>;
  * The Stage is the main parent component of the node-editor. It holds all the Nodes and Connections pased in as children. It's main pourpose is to allow panning and zooming.
  */
 export const Stage: Stage = ({
-  children,
+  tree,
   className,
   disablePan,
   disableZoom,
   ...props
 }) => {
   const [
-    zoom,
-    coordinates,
     setCoordinates,
     setZoom,
+    zoom,
+    coordinates,
   ] = useEditorStore((state) => [
-    state.zoom,
-    state.coordinates,
     state.setCoordinates,
     state.setZoom,
+    state.zoom,
+    state.coordinates,
   ]);
+
+  const [setInitialState, nodes, connections, nodeTypes] = useTreeStore(
+    (state) => [
+      state.setInitialState,
+      state.data.nodes,
+      state.data.connections,
+      state.data.nodeTypes,
+    ],
+    shallow
+  );
+
+  React.useEffect(() => {
+    setZoom(tree.state.position.zoom);
+    setCoordinates(tree.state.position.coordinates);
+    setInitialState({
+      nodes: tree.state.nodes,
+      nodeTypes: tree.config.nodeTypes,
+      portTypes: tree.config.portTypes,
+      connections: tree.state.connections,
+    });
+  }, [setCoordinates, setInitialState, setZoom, tree]);
 
   /**
    * These gestures represent the panning and zooming inside the Stage. They are enabled and disabled by the `disableZoom` and `disablePan` props.
@@ -82,10 +112,26 @@ export const Stage: Stage = ({
       <div
         className="origin-center absolute left-1/2 top-1/2"
         style={{
-          transform: `translate(${stageContext.coordinates[0]}px, ${stageContext.coordinates[1]}px)`,
+          transform: `translate(${coordinates[0]}px, ${coordinates[1]}px)`,
         }}
       >
         {/* This inner wrapper is used to zoom.  */}
+        <div className="absolute" style={{ transform: `scale(${zoom})` }}>
+          <div className="absolute left-0 h-0">
+            {Object.entries(connections).map(([outputNodeId, connections]) =>
+              connections.map((id) => (
+                <ExistingConnection
+                  key={`${outputNodeId}-${id}`}
+                  output={nodes[outputNodeId]}
+                  input={nodes[id]}
+                />
+              ))
+            )}
+          </div>
+          {Object.values(nodes).map((node) => (
+            <Node node={node} config={nodeTypes[node.type]} key={node.id} />
+          ))}
+        </div>
       </div>
     </StageContainer>
   );

@@ -1,39 +1,35 @@
-import { edges, nodes, nodeTypes, portTypes } from "../types";
+import { connections, nodes, nodeTypes, portTypes } from "../types";
 
 export const exampleNodes: nodes = {
   node1: {
+    id: "node1",
     coordinates: [200, -200],
     type: "addNumbers",
-    width: 250,
-    height: 100,
     name: "Addiere zwei Zahlen",
   },
   node2: {
+    id: "node2",
     coordinates: [-200, -176],
     type: "number",
-    width: 250,
-    height: 100,
     name: "Irgendwas mit Nummer",
   },
   node3: {
+    id: "node3",
     coordinates: [181.5, -42],
     type: "number",
-    width: 250,
-    height: 100,
     name: "Whatever",
   },
   node6: {
+    id: "node6",
     coordinates: [-200, 40],
     type: "number",
-    width: 250,
-    height: 100,
     name: "Test",
   },
 };
 
-export const exampleEdges: edges = {
-  node2: [{ nodeId: "node1" }, { nodeId: "node3" }],
-  node6: [{ nodeId: "node3" }],
+export const exampleConnections: connections = {
+  node2: ["node1", "node3"],
+  node6: ["node3"],
 };
 
 export const examplePortTypes: portTypes = {

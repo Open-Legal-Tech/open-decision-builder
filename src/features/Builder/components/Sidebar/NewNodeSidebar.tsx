@@ -1,11 +1,12 @@
 import React from "react";
 import { CSS, styled } from "utils/stitches.config";
-import { useEditorStore, useNodesStore } from "../../globalState";
+import { useEditorStore, useTreeStore } from "../../globalState";
 import { LeftSidebar } from "./LeftSidebar";
 import { ToolbarNode } from "./ToolbarNode";
 import { pick } from "remeda";
 import { coordinates } from "../../types";
 import { nanoid } from "nanoid/non-secure";
+import shallow from "zustand/shallow";
 
 const turnNumberIntoOpposite = (number: number) =>
   number > 0 ? -number : Math.abs(number);
@@ -23,12 +24,14 @@ const NodeList = styled("div", { display: "grid", gap: "$4" });
 type NewNodeSidebarProps = { css?: CSS };
 
 export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({ css }) => {
-  const nodeTypes = useNodesStore((state) => state.nodeTypes);
+  const [nodeTypes, addNode] = useTreeStore(
+    (state) => [state.data.nodeTypes, state.addNode],
+    shallow
+  );
   const options = Object.values(nodeTypes).map((nodeType) =>
     pick(nodeType, ["label", "color", "type", "width"])
   );
 
-  const addNode = useNodesStore((state) => state.addNode);
   const [stageCoordinates, zoom] = useEditorStore((state) => [
     state.coordinates,
     state.zoom,
@@ -44,7 +47,13 @@ export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({ css }) => {
             key={option.label}
             label={option.label}
             color={option.color}
-            onClick={() => addNode(option.type, centerOfStage, nanoid(5))}
+            onClick={() =>
+              addNode({
+                type: option.type,
+                coordinates: centerOfStage,
+                id: nanoid(5),
+              })
+            }
           />
         ))}
       </NodeList>

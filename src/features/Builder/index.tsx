@@ -5,11 +5,7 @@ import React from "react";
 import { Stage } from "./components/Stage/Stage";
 
 //Hooks and Functions
-import { useEdgesStore, useEditorStore, useNodesStore } from "./globalState";
-import { Nodes } from "./components/Node/Nodes";
-import { ConnectionsWrapper } from "./components/Connections/ConnectionsWrapper";
-import { coordinates, edges, nodes, nodeTypes, portTypes } from "./types";
-import shallow from "zustand/shallow";
+import { coordinates, connections, nodes, nodeTypes, portTypes } from "./types";
 import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
 import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
 
@@ -43,7 +39,7 @@ export type Tree = {
     /**
      * The currently shown Nodes.
      */
-    edges: edges;
+    connections: connections;
   };
 };
 
@@ -67,22 +63,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
   disableZoom = false,
   disablePan = false,
 }) => {
-  const [setCoordinates, setZoom] = useEditorStore(
-    (state) => [state.setCoordinates, state.setZoom],
-    shallow
-  );
-  const setNodes = useNodesStore((state) => state.setNodes, shallow);
-  const setEdges = useEdgesStore((state) => state.setEdges, shallow);
-
-  React.useEffect(() => {
-    setZoom(tree.state.position.zoom);
-    setCoordinates(tree.state.position.coordinates);
-    setNodes(tree.state.nodes, tree.config.nodeTypes, tree.config.portTypes);
-    setEdges(tree.state.edges);
-  }, [setCoordinates, setEdges, setNodes, setZoom, tree]);
-
-  //----------------------------------------------------------------
-
   return (
     <div
       className="w-full h-full grid"
@@ -96,10 +76,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         disablePan={disablePan}
         disableZoom={disableZoom}
         style={{ gridColumn: "1 / -1", gridRow: "1" }}
-      >
-        <ConnectionsWrapper />
-        <Nodes />
-      </Stage>
+        tree={tree}
+      />
       <NewNodeSidebar css={{ gridColumn: "1 / 2", gridRow: "1" }} />
       <NodeEditingSidebar css={{ gridColumn: "3 / 4", gridRow: "1" }} />
     </div>
