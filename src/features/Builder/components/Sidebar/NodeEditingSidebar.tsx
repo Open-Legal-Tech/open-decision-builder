@@ -18,8 +18,10 @@ export const useSidebarState = create<SidebarState>((set) => ({
   open: false,
   nodeId: "",
   nodeType: "",
-  toggleSidebar: (boolean) =>
-    set((state) => ({ open: boolean ? boolean : !state.open })),
+  toggleSidebar: (boolean) => {
+    console.log(boolean);
+    set((state) => ({ open: boolean !== undefined ? boolean : !state.open }));
+  },
   openSidebar: (nodeId, nodeType) => set({ open: true, nodeId, nodeType }),
   closeSidebar: () => set({ open: false, nodeId: "", nodeType: "" }),
 }));
