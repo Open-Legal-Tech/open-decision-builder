@@ -16,8 +16,6 @@ const StageContainer = styled("div", {
     "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E\")",
 });
 
-StageContainer.displayName = "StageContainer";
-
 type StageProps = {
   tree: Tree;
   /**
@@ -44,17 +42,15 @@ export const Stage: Stage = ({
   disableZoom,
   ...props
 }) => {
-  const [
-    setCoordinates,
-    setZoom,
-    zoom,
-    coordinates,
-  ] = useEditorStore((state) => [
-    state.setCoordinates,
-    state.setZoom,
-    state.zoom,
-    state.coordinates,
-  ]);
+  const [setCoordinates, setZoom, zoom, coordinates] = useEditorStore(
+    (state) => [
+      state.setCoordinates,
+      state.setZoom,
+      state.zoom,
+      state.coordinates,
+    ],
+    shallow
+  );
 
   const [setInitialState, nodes, connections, nodeTypes] = useTreeStore(
     (state) => [
@@ -102,12 +98,7 @@ export const Stage: Stage = ({
   //------------------------------------------------------------------------
 
   return (
-    <StageContainer
-      className={className}
-      tabIndex={-1}
-      {...stageGestures()}
-      {...props}
-    >
+    <StageContainer tabIndex={-1} {...stageGestures()} {...props}>
       {/* This inner wrapper is used to translate the position of the content on pan. */}
       <div
         className="origin-center absolute left-1/2 top-1/2"

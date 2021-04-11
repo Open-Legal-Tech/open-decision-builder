@@ -5,6 +5,7 @@ import { nanoid } from "nanoid/non-secure";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { styled } from "utils/stitches.config";
 import { coordinates, node } from "../../types";
+import shallow from "zustand/shallow";
 
 type NewNodeMenuProps = {
   node: node;
@@ -46,11 +47,10 @@ const Label = styled(DropdownMenu.Label, {
 type useNewNode = (originNode: node) => (nodeType: string) => void;
 
 const useNewNode: useNewNode = (originNode) => {
-  const [addNode, nodeTypes, addConnection] = useTreeStore((state) => [
-    state.addNode,
-    state.data.nodeTypes,
-    state.addConnection,
-  ]);
+  const [addNode, nodeTypes, addConnection] = useTreeStore(
+    (state) => [state.addNode, state.data.nodeTypes, state.addConnection],
+    shallow
+  );
 
   const createNewNode = (nodeType: string) => {
     const config = nodeTypes[nodeType];
@@ -79,7 +79,7 @@ export const NewNodeMenu: React.FC<NewNodeMenuProps> = ({
   onOpenChange,
   children,
 }) => {
-  const nodeTypes = useTreeStore((state) => state.data.nodeTypes);
+  const nodeTypes = useTreeStore((state) => state.data.nodeTypes, shallow);
   const options = Object.values(nodeTypes).map((nodeType) =>
     pick(nodeType, ["label", "color", "type", "width"])
   );

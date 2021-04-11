@@ -15,7 +15,7 @@ type NodeProps = {
   config: nodeConfig;
 };
 
-export const Node: React.FC<NodeProps> = ({ node, config }) => {
+export const Node: React.FC<NodeProps> = React.memo(({ node, config }) => {
   const [setNode] = useTreeStore((state) => [state.setNode], shallow);
 
   const zoom = useEditorStore((state) => state.zoom);
@@ -121,4 +121,4 @@ export const Node: React.FC<NodeProps> = ({ node, config }) => {
       )}
     </div>
   );
-};
+});

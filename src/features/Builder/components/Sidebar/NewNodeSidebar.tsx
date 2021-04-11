@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { CSS, styled } from "utils/stitches.config";
 import { useEditorStore, useTreeStore } from "../../globalState";
 import { LeftSidebar } from "./LeftSidebar";
 import { ToolbarNode } from "./ToolbarNode";
 import { pick } from "remeda";
-import { coordinates } from "../../types";
+import { coordinates, nodeTypes } from "../../types";
 import { nanoid } from "nanoid/non-secure";
 import shallow from "zustand/shallow";
 
@@ -19,6 +19,11 @@ const getCenterOfStage = (
   turnNumberIntoOpposite(coordinates[1] / zoom),
 ];
 
+const createOptions = (nodeTypes: nodeTypes) =>
+  Object.values(nodeTypes).map((nodeType) =>
+    pick(nodeType, ["label", "color", "type", "width"])
+  );
+
 const NodeList = styled("div", { display: "grid", gap: "$4" });
 
 type NewNodeSidebarProps = { css?: CSS };
@@ -28,19 +33,16 @@ export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({ css }) => {
     (state) => [state.data.nodeTypes, state.addNode],
     shallow
   );
-  const options = Object.values(nodeTypes).map((nodeType) =>
-    pick(nodeType, ["label", "color", "type", "width"])
+
+  const options = useMemo(() => createOptions(nodeTypes), [nodeTypes]);
+
+  const [stageCoordinates, zoom] = useEditorStore(
+    (state) => [state.coordinates, state.zoom],
+    shallow
   );
 
-  const [stageCoordinates, zoom] = useEditorStore((state) => [
-    state.coordinates,
-    state.zoom,
-  ]);
-
-  const centerOfStage = getCenterOfStage(stageCoordinates, zoom);
-
   return (
-    <LeftSidebar width={300} css={css} title="Neuen Knoten hinzufügen">
+    <LeftSidebar css={css} title="Neuen Knoten hinzufügen">
       <NodeList>
         {options.map((option) => (
           <ToolbarNode
@@ -50,7 +52,7 @@ export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({ css }) => {
             onClick={() =>
               addNode({
                 type: option.type,
-                coordinates: centerOfStage,
+                coordinates: getCenterOfStage(stageCoordinates, zoom),
                 id: nanoid(5),
               })
             }
