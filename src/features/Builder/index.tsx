@@ -8,6 +8,13 @@ import { Stage } from "./components/Stage/Stage";
 import { coordinates, connections, nodes, nodeTypes, portTypes } from "./types";
 import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
 import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
+import { styled } from "utils/stitches.config";
+
+const Container = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "max-content 1fr max-content",
+  flexGrow: 1,
+});
 
 export type Tree = {
   config: {
@@ -64,22 +71,27 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
   disablePan = false,
 }) => {
   return (
-    <div
-      className="w-full h-full grid"
-      style={{
-        gridTemplateColumns: "max-content 4fr 1fr",
-        gridTemplateRows: "1fr",
-        overflow: "hidden",
-      }}
-    >
+    <Container>
       <Stage
         disablePan={disablePan}
         disableZoom={disableZoom}
         style={{ gridColumn: "1 / -1", gridRow: "1" }}
         tree={tree}
       />
-      <NewNodeSidebar css={{ gridColumn: "1 / 2", gridRow: "1" }} />
-      <NodeEditingSidebar css={{ gridColumn: "3 / 4", gridRow: "1" }} />
-    </div>
+      <NewNodeSidebar
+        css={{
+          gridColumn: "1 / 2",
+          gridRow: "1",
+          overflowY: "auto",
+        }}
+      />
+      <NodeEditingSidebar
+        css={{
+          gridColumn: "3 / 4",
+          gridRow: "1",
+          overflowY: "auto",
+        }}
+      />
+    </Container>
   );
 };

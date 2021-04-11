@@ -56,7 +56,6 @@ export const NodeEditingSidebar: React.FC<NodeEditingSidebarProps> = ({
     <RightSidebar
       css={css}
       title="Knoten bearbeiten"
-      width={700}
       open={isSidebarOpen}
       onOpenChange={toggleSidebar}
     >
