@@ -31,7 +31,7 @@ export default function Tree() {
   );
 
   return (
-    <MainContent>
+    <MainContent css={{ overflow: "hidden" }}>
       {tree.isSuccess && <NodeEditor tree={tree.data} />}
     </MainContent>
   );
