@@ -75,7 +75,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
       <Stage
         disablePan={disablePan}
         disableZoom={disableZoom}
-        style={{ gridColumn: "1 / -1", gridRow: "1" }}
+        css={{ gridColumn: "1 / -1", gridRow: "1" }}
         tree={tree}
       />
       <NewNodeSidebar
