@@ -9,7 +9,6 @@ import { Node } from "../Node/Node";
 
 const StageContainer = styled("div", {
   overflow: "hidden",
-  position: "relative",
   outline: "none",
   backgroundColor: "#ffffff",
   backgroundImage:
@@ -35,13 +34,7 @@ type Stage = React.FC<React.HTMLAttributes<HTMLDivElement> & StageProps>;
 /**
  * The Stage is the main parent component of the node-editor. It holds all the Nodes and Connections pased in as children. It's main pourpose is to allow panning and zooming.
  */
-export const Stage: Stage = ({
-  tree,
-  className,
-  disablePan,
-  disableZoom,
-  ...props
-}) => {
+export const Stage: Stage = ({ tree, disablePan, disableZoom, ...props }) => {
   const [setCoordinates, setZoom, zoom, coordinates] = useEditorStore(
     (state) => [
       state.setCoordinates,
