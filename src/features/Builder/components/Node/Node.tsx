@@ -7,7 +7,7 @@ import { Port } from "./Port";
 import clsx from "clsx";
 import { NewNodeMenu } from "./NewNodeMenu";
 import { Trigger } from "@radix-ui/react-dropdown-menu";
-import { useSidebarState } from "../Sidebar/NodeEditingSidebar";
+import { useNodeEditingSidebarState } from "../Sidebar/NodeEditingSidebar";
 import { node, nodeConfig } from "features/Builder/types";
 
 type NodeProps = {
@@ -16,14 +16,28 @@ type NodeProps = {
 };
 
 export const Node: React.FC<NodeProps> = React.memo(({ node, config }) => {
+  /**
+   * Read this first!
+   * All elements of the Node have to contain the data-id={id} attribute.
+   * This is needed for the creation of new connections. They use this attribute on
+   * the target of the creation gesture.
+   */
+
+  //-----------------------------------------------------------------------
+
   const [setNode] = useTreeStore((state) => [state.setNode], shallow);
 
   const zoom = useEditorStore((state) => state.zoom);
   const [dragging, setDragging] = React.useState(false);
-  const openSidebar = useSidebarState((state) => state.openSidebar);
+  const openSidebar = useNodeEditingSidebarState((state) => state.openSidebar);
 
   //-----------------------------------------------------------------------
-  //This is the drag gesture of the node. It updates the Node state when the Node is dragged. The initial start position of the Node come from the coordinates in the nodes state. We transform the data produced by the drag operation by dividing it with the editor zoom. This makes sure that we keep the Node under the mouse when dragging.
+  /**
+   * This is the drag gesture of the node. It updates the Node state when the Node is dragged.
+   * The initial start position of the Node come from the coordinates in the nodes state.
+   * We transform the data produced by the drag operation by dividing it with the editor zoom.
+   * This makes sure that we keep the Node under the mouse when dragging.
+   */
   const nodeGestures = useGesture(
     {
       onDragStart: () => setDragging(true),
@@ -55,7 +69,6 @@ export const Node: React.FC<NodeProps> = React.memo(({ node, config }) => {
       className={clsx("absolute left-0 top-0 grid", dragging && "z-50")}
       data-id={node.id}
     >
-      {/* This is the body of the Node. */}
       <button
         className={clsx(
           "bg-gray-100 rounded shadow-lg flex flex-col select-none border-l-4 hover:shadow-xl transition-shadow duration-200 col-start-2 col-end-5 row-span-full",
