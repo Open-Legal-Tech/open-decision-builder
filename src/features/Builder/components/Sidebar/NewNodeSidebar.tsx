@@ -42,23 +42,21 @@ export const NewNodeSidebar: React.FC<NewNodeSidebarProps> = ({ css }) => {
   );
 
   return (
-    <LeftSidebar css={css} title="Neuen Knoten hinzufügen">
-      <NodeList>
-        {options.map((option) => (
-          <ToolbarNode
-            key={option.label}
-            label={option.label}
-            color={option.color}
-            onClick={() =>
-              addNode({
-                type: option.type,
-                coordinates: getCenterOfStage(stageCoordinates, zoom),
-                id: nanoid(5),
-              })
-            }
-          />
-        ))}
-      </NodeList>
-    </LeftSidebar>
+    <NodeList>
+      {options.map((option) => (
+        <ToolbarNode
+          key={option.label}
+          label={option.label}
+          color={option.color}
+          onClick={() =>
+            addNode({
+              type: option.type,
+              coordinates: getCenterOfStage(stageCoordinates, zoom),
+              id: nanoid(5),
+            })
+          }
+        />
+      ))}
+    </NodeList>
   );
 };

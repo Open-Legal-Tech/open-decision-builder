@@ -7,8 +7,13 @@ import { Stage } from "./components/Stage/Stage";
 //Hooks and Functions
 import { coordinates, connections, nodes, nodeTypes, portTypes } from "./types";
 import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
-import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
+import {
+  NodeEditingSidebar,
+  useNodeEditingSidebarState,
+} from "./components/Sidebar/NodeEditingSidebar";
 import { styled } from "utils/stitches.config";
+import { LeftSidebar } from "./components/Sidebar/LeftSidebar";
+import { RightSidebar } from "./components/Sidebar/RightSidebar";
 
 const Container = styled("div", {
   display: "grid",
@@ -70,6 +75,11 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
   disableZoom = false,
   disablePan = false,
 }) => {
+  const [isSidebarOpen, toogleSidebar] = useNodeEditingSidebarState((state) => [
+    state.open,
+    state.toggleSidebar,
+  ]);
+
   return (
     <Container>
       <Stage
@@ -78,20 +88,28 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({
         css={{ gridColumn: "1 / -1", gridRow: "1" }}
         tree={tree}
       />
-      <NewNodeSidebar
+      <LeftSidebar
         css={{
           gridColumn: "1 / 2",
           gridRow: "1",
           overflowY: "auto",
         }}
-      />
-      <NodeEditingSidebar
+        title="Neuen Knoten hinzufügen"
+      >
+        <NewNodeSidebar />
+      </LeftSidebar>
+      <RightSidebar
         css={{
           gridColumn: "3 / 4",
           gridRow: "1",
           overflowY: "auto",
         }}
-      />
+        title="Knoten bearbeiten"
+        open={isSidebarOpen}
+        onOpenChange={toogleSidebar}
+      >
+        <NodeEditingSidebar />
+      </RightSidebar>
     </Container>
   );
 };
