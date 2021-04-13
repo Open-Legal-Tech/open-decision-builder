@@ -12,7 +12,7 @@ export const Connection = React.forwardRef<SVGPathElement, Connection>(
     return (
       <svg
         className={clsx(
-          "absolute left-0 top-0 overflow-visible w-1 h-0",
+          "absolute left-0 top-0 overflow-visible w-1 h-1",
           !enableEvents && "pointer-events-none"
         )}
         fill="none"
