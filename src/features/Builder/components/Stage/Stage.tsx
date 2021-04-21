@@ -1,7 +1,7 @@
 import { Tree } from "features/Builder";
 import { useEditorStore, useTreeStore } from "features/Builder/globalState";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React from "react";
 import { useGesture } from "react-use-gesture";
 import { CSS, styled } from "utils/stitches.config";
 import shallow from "zustand/shallow";
