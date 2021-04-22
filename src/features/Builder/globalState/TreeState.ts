@@ -1,7 +1,7 @@
 import produce from "immer";
 import { devtools } from "zustand/middleware";
 import create from "zustand";
-import { Tree } from "../Builder";
+import { Tree } from "../NodeEditor";
 import {
   addEdge,
   Connection,

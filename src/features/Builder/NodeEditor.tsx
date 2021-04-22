@@ -11,23 +11,18 @@ import {
 import { styled } from "utils/stitches.config";
 import { LeftSidebar } from "./components/Sidebar/LeftSidebar";
 import { RightSidebar } from "./components/Sidebar/RightSidebar";
-import ReactFlow, {
-  Background,
-  Controls,
-  MiniMap,
-  Elements,
-  ReactFlowProvider,
-  BackgroundVariant,
-  OnLoadParams,
-} from "react-flow-renderer";
-import { nanoid } from "nanoid/non-secure";
+import { Elements, ReactFlowProvider, OnLoadParams } from "react-flow-renderer";
 import { useTreeStore } from "./globalState";
+import { nanoid } from "nanoid/non-secure";
+import { Stage } from "./Stage";
 
 const Container = styled("div", {
   display: "grid",
   gridTemplateColumns: "max-content 1fr max-content",
   flexGrow: 1,
 });
+
+export type ElementData = { label: string };
 
 export type Tree = {
   config: {
@@ -42,7 +37,7 @@ export type Tree = {
   };
   state: {
     treeName: string;
-    elements: Elements<{ label: string }>;
+    elements: Elements<ElementData>;
   };
 };
 
@@ -67,6 +62,8 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
     setReactFlowInstance,
   ] = useState<OnLoadParams<any> | null>(null);
 
+  const openSidebar = useNodeEditingSidebarState((state) => state.openSidebar);
+
   const [
     elements,
     setInitialState,
@@ -83,19 +80,14 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
     state.tree.config.nodeTypes,
   ]);
 
+  const [isSidebarOpen, toggleSidebar] = useNodeEditingSidebarState((state) => [
+    state.open,
+    state.toggleSidebar,
+  ]);
+
   useEffect(() => {
     setInitialState(tree);
   }, [tree, setInitialState]);
-
-  const [
-    isSidebarOpen,
-    toggleSidebar,
-    openSidebar,
-  ] = useNodeEditingSidebarState((state) => [
-    state.open,
-    state.toggleSidebar,
-    state.openSidebar,
-  ]);
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -104,11 +96,10 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
 
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
+    const type = event.dataTransfer.getData("application/reactflow");
 
-    if (reactFlowWrapper.current && reactFlowInstance) {
+    if (reactFlowWrapper.current && reactFlowInstance && type) {
       const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-
-      const type = event.dataTransfer.getData("application/reactflow");
 
       const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
@@ -125,8 +116,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
       addNode(newNode);
     }
   };
-
-  console.log({ elements, nodeTypes });
 
   return (
     <Container>
@@ -160,35 +149,17 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
           >
             <NodeEditingSidebar />
           </RightSidebar>
-          <ReactFlow
+          <Stage
             elements={elements}
             onElementsRemove={removeElements}
             onConnect={addEdge}
-            deleteKeyCode={46}
-            onNodeDoubleClick={(event, node) => openSidebar(node.id)}
-            onLoad={setReactFlowInstance}
-            onDrop={onDrop}
             onDragOver={onDragOver}
+            onDrop={onDrop}
+            tree={tree}
+            onLoad={setReactFlowInstance}
+            onElementClick={(_, node) => openSidebar(node.id)}
             style={{ gridColumn: "1 / -1", gridRow: "1" }}
-          >
-            <Background variant={BackgroundVariant.Dots} gap={24} size={1} />
-            <MiniMap
-              nodeColor={(node) => {
-                switch (node.type) {
-                  case "input":
-                    return "red";
-                  case "default":
-                    return "#00ff00";
-                  case "output":
-                    return "rgb(0,0,255)";
-                  default:
-                    return "#eee";
-                }
-              }}
-              nodeStrokeWidth={3}
-            />
-            <Controls />
-          </ReactFlow>
+          />
         </div>
       </ReactFlowProvider>
     </Container>
