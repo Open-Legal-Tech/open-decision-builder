@@ -1,20 +1,26 @@
 //External Libraries
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 //Hooks and Functions
 import { portTypes, nodeTypes } from "./types";
 import { NewNodeSidebar } from "./components/Sidebar/NewNodeSidebar";
-import {
-  NodeEditingSidebar,
-  useNodeEditingSidebarState,
-} from "./components/Sidebar/NodeEditingSidebar";
+import { NodeEditingSidebar } from "./components/Sidebar/NodeEditingSidebar";
 import { styled } from "utils/stitches.config";
 import { LeftSidebar } from "./components/Sidebar/LeftSidebar";
 import { RightSidebar } from "./components/Sidebar/RightSidebar";
-import { Elements, ReactFlowProvider, OnLoadParams } from "react-flow-renderer";
-import { useTreeStore } from "./globalState";
+import {
+  Elements,
+  ReactFlowProvider,
+  OnLoadParams,
+  Node,
+  isNode,
+  addEdge,
+  removeElements,
+} from "react-flow-renderer";
 import { nanoid } from "nanoid/non-secure";
 import { Stage } from "./Stage";
+import { getElement, updateNode } from "./utilities/stateFunctions";
+import { pipe } from "remeda";
 
 const Container = styled("div", {
   display: "grid",
@@ -55,39 +61,17 @@ type NodeEditorProps = {
    */
   disablePan?: boolean;
 };
+
 export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
+  const [elements, setElements] = useState(tree.state.elements);
+  const [selectedNodeId, setSelectedNodeId] = useState("");
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
+
   const [
     reactFlowInstance,
     setReactFlowInstance,
   ] = useState<OnLoadParams<any> | null>(null);
-
-  const openSidebar = useNodeEditingSidebarState((state) => state.openSidebar);
-
-  const [
-    elements,
-    setInitialState,
-    addNode,
-    addEdge,
-    removeElements,
-    nodeTypes,
-  ] = useTreeStore((state) => [
-    state.tree.state.elements,
-    state.setInitialState,
-    state.addNode,
-    state.addEdge,
-    state.removeElements,
-    state.tree.config.nodeTypes,
-  ]);
-
-  const [isSidebarOpen, toggleSidebar] = useNodeEditingSidebarState((state) => [
-    state.open,
-    state.toggleSidebar,
-  ]);
-
-  useEffect(() => {
-    setInitialState(tree);
-  }, [tree, setInitialState]);
 
   const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -113,9 +97,13 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
         data: { label: `${type} node` },
       };
 
-      addNode(newNode);
+      setElements([...elements, newNode]);
     }
   };
+
+  const selectedNode = pipe(elements, getElement(selectedNodeId), (el) =>
+    el && isNode(el) ? el : undefined
+  );
 
   return (
     <Container>
@@ -134,7 +122,7 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
             }}
             title="Neuen Knoten hinzufügen"
           >
-            <NewNodeSidebar nodeTypes={nodeTypes} />
+            <NewNodeSidebar nodeTypes={tree.config.nodeTypes} />
           </LeftSidebar>
           <RightSidebar
             css={{
@@ -145,19 +133,30 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
             }}
             title="Knoten bearbeiten"
             open={isSidebarOpen}
-            onOpenChange={toggleSidebar}
+            onOpenChange={(boolean) => setSidebarOpen(boolean ?? !open)}
           >
-            <NodeEditingSidebar />
+            <NodeEditingSidebar
+              node={selectedNode}
+              setNode={(nodeId: string, newNode: Partial<Node<ElementData>>) =>
+                pipe(elements, updateNode(nodeId, newNode), setElements)
+              }
+            />
           </RightSidebar>
           <Stage
             elements={elements}
-            onElementsRemove={removeElements}
-            onConnect={addEdge}
+            onElementsRemove={(elementsToRemove) =>
+              removeElements(elementsToRemove, elements)
+            }
+            onConnect={(connection) =>
+              setElements(addEdge(connection, elements))
+            }
             onDragOver={onDragOver}
             onDrop={onDrop}
-            tree={tree}
             onLoad={setReactFlowInstance}
-            onElementClick={(_, node) => openSidebar(node.id)}
+            onElementClick={(_, node) => {
+              setSidebarOpen(true);
+              setSelectedNodeId(node.id);
+            }}
             style={{ gridColumn: "1 / -1", gridRow: "1" }}
           />
         </div>

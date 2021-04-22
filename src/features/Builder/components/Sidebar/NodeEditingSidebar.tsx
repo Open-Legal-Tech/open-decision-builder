@@ -1,38 +1,16 @@
+import { ElementData } from "features/Builder/NodeEditor";
 import React from "react";
-import { useTreeStore } from "../../globalState";
-import create from "zustand";
-import shallow from "zustand/shallow";
-import { nodeTypes } from "features/Builder/types";
+import { Node } from "react-flow-renderer";
 
-type SidebarState = {
-  open: boolean;
-  nodeId: string;
-  toggleSidebar: (boolean?: boolean) => void;
-  openSidebar: (nodeId: string) => void;
-  closeSidebar: () => void;
+type NodeEditingSidebarProps = {
+  node: Node<ElementData> | undefined;
+  setNode: (nodeId: string, newNode: Partial<Node<ElementData>>) => void;
 };
 
-export const useNodeEditingSidebarState = create<SidebarState>((set) => ({
-  open: false,
-  nodeId: "",
-  toggleSidebar: (boolean) => {
-    set((state) => ({ open: boolean !== undefined ? boolean : !state.open }));
-  },
-  openSidebar: (nodeId) => set({ open: true, nodeId }),
-  closeSidebar: () => set({ open: false, nodeId: "" }),
-}));
-
-export const NodeEditingSidebar = (): JSX.Element => {
-  const [nodeId] = useNodeEditingSidebarState((state) => [state.nodeId]);
-
-  const [node, setNode] = useTreeStore(
-    (state) => [
-      state.tree.state.elements.find((element) => element.id === nodeId),
-      state.setNode,
-    ],
-    shallow
-  );
-
+export const NodeEditingSidebar = ({
+  node,
+  setNode,
+}: NodeEditingSidebarProps): JSX.Element => {
   return node?.data ? (
     <>
       <header className="flex justify-between items-stretch space-x-4">
@@ -40,7 +18,7 @@ export const NodeEditingSidebar = (): JSX.Element => {
           className="text-xl font-semibold border-b-4 pb-1 bg-gray-100 flex-1"
           value={node.data.label}
           onChange={(event) =>
-            setNode({ id: nodeId, data: { label: event.target.value } })
+            setNode(node.id, { data: { label: event.target.value } })
           }
           maxLength={30}
         />

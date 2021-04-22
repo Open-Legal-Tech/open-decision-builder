@@ -5,9 +5,8 @@ import ReactFlow, {
   Controls,
   MiniMap,
 } from "react-flow-renderer";
-import { Tree } from "./NodeEditor";
 
-type StageProps = ComponentProps<typeof ReactFlow> & { tree: Tree };
+type StageProps = ComponentProps<typeof ReactFlow>;
 
 export const Stage = ({ ...props }: StageProps): JSX.Element => {
   return (
