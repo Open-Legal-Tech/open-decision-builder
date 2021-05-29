@@ -109,10 +109,27 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
     <Container>
       <ReactFlowProvider>
         <div
-          className="w-screen h-full grid"
+          className="w-screen h-full grid overflow-auto"
           style={{ grid: "inherit" }}
           ref={reactFlowWrapper}
         >
+          <Stage
+            elements={elements}
+            onElementsRemove={(elementsToRemove) =>
+              removeElements(elementsToRemove, elements)
+            }
+            onConnect={(connection) =>
+              setElements(addEdge(connection, elements))
+            }
+            onDragOver={onDragOver}
+            onDrop={onDrop}
+            onLoad={setReactFlowInstance}
+            onElementClick={(_, node) => {
+              setSidebarOpen(true);
+              setSelectedNodeId(node.id);
+            }}
+            style={{ gridColumn: "1 / -1", gridRow: "1" }}
+          />
           <LeftSidebar
             css={{
               gridColumn: "1 / 2",
@@ -142,23 +159,6 @@ export const NodeEditor: React.FC<NodeEditorProps> = ({ tree }) => {
               }
             />
           </RightSidebar>
-          <Stage
-            elements={elements}
-            onElementsRemove={(elementsToRemove) =>
-              removeElements(elementsToRemove, elements)
-            }
-            onConnect={(connection) =>
-              setElements(addEdge(connection, elements))
-            }
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            onLoad={setReactFlowInstance}
-            onElementClick={(_, node) => {
-              setSidebarOpen(true);
-              setSelectedNodeId(node.id);
-            }}
-            style={{ gridColumn: "1 / -1", gridRow: "1" }}
-          />
         </div>
       </ReactFlowProvider>
     </Container>
