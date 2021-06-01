@@ -44,7 +44,7 @@ export const RightSidebar: React.FC<SidebarProps> = ({
           </motion.div>
         </Toggle>
       </Tooltip>
-      <Content css={{ flexGrow: 1, width: "clamp(300px, 40vw, 600px)" }}>
+      <Content css={{ flexGrow: 1, width: "clamp(300px, 70vw, 800px)" }}>
         <Header css={{ marginBottom: "$4" }}>{title}</Header>
         {children}
       </Content>
